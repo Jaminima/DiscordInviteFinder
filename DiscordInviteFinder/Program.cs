@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 
@@ -14,21 +15,28 @@ namespace DiscordInviteFinder
             List<String> Chars = new List<string> { };
             foreach (String C in "a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|0|1|2|3|4|5|6|7|8|9".Split("|".ToCharArray())) { Chars.Add(C); }
 
-            List<String> Codes = new List<string> { };
+            List<Thread> Threads=new List<Thread> { };
 
-            //List<String> CurCode = new List<string> { "p", "Z", "4", "9", "y", "u" }; //Valid Code
+            //List<String> CurCode = new List<string> { "M", "B", "B", "R", "z", "s" }; //Valid Code https://discord.gg/MBBRzs
             List<String> CurCode = new List<string> { "a","a","a","a","a","a" };
             while (CurCode != new List<string> { "9", "9", "9", "9", "9", "9" })
             {
                 string Code = CurCode[0] + CurCode[1] + CurCode[2] + CurCode[3] + CurCode[4] + CurCode[5];
-                string Response = GetResponse(Code);
-                if (Response != null) {
-                    Codes.Add(Code);
-                    System.Console.WriteLine(Code);
-                }
+                Threads.Add(new Thread(()=>CheckCode(Code)));
+                Threads[Threads.Count - 1].Start();
                 CurCode = IterateCode(CurCode, Chars);
             }
             System.Console.ReadLine();
+        }
+
+        static void CheckCode(string Code)
+        {
+            string Response = GetResponse(Code);
+            if (Response != null)
+            {
+                System.IO.File.AppendAllText("./Valid.dat", "\n" + Code);
+                System.Console.WriteLine(Code);
+            }
         }
 
         static WebClient wb = new WebClient();

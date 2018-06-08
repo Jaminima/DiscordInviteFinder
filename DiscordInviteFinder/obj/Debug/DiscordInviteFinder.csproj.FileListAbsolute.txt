@@ -10,3 +10,10 @@ D:\Programming\C#\DiscordInviteFinder\DiscordInviteFinder\bin\Debug\HtmlAgilityP
 D:\Programming\C#\DiscordInviteFinder\DiscordInviteFinder\bin\Debug\HtmlAgilityPack.xml
 D:\Programming\C#\DiscordInviteFinder\DiscordInviteFinder\obj\Debug\DiscordInviteFinder.csproj.CopyComplete
 D:\Programming\C#\DiscordInviteFinder\DiscordInviteFinder\bin\Debug\cmd.dll
+C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\bin\Debug\DiscordInviteFinder.exe.config
+C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\bin\Debug\DiscordInviteFinder.exe
+C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\bin\Debug\DiscordInviteFinder.pdb
+C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\obj\Debug\DiscordInviteFinder.csprojAssemblyReference.cache
+C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\obj\Debug\DiscordInviteFinder.csproj.CoreCompileInputs.cache
+C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\obj\Debug\DiscordInviteFinder.exe
+C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\obj\Debug\DiscordInviteFinder.pdb
