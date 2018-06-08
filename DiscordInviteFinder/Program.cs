@@ -10,15 +10,17 @@ namespace DiscordInviteFinder
 {
     static class Program
     {
+        //static List<String> CurCode = new List<string> { "M", "B", "B", "R", "z", "s" }; //Valid Code https://discord.gg/MBBRzs
+        static List<String> CurCode = new List<string> { "a", "a", "a", "a", "a", "a" };
         static void Main(string[] args)
         {
+            CurCode = Load();
+            Console.CancelKeyPress += new ConsoleCancelEventHandler(Save);
             List<String> Chars = new List<string> { };
             foreach (String C in "a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|0|1|2|3|4|5|6|7|8|9".Split("|".ToCharArray())) { Chars.Add(C); }
 
             List<Thread> Threads=new List<Thread> { };
 
-            //List<String> CurCode = new List<string> { "M", "B", "B", "R", "z", "s" }; //Valid Code https://discord.gg/MBBRzs
-            List<String> CurCode = new List<string> { "a","a","a","a","a","a" };
             while (CurCode != new List<string> { "9", "9", "9", "9", "9", "9" })
             {
                 string Code = CurCode[0] + CurCode[1] + CurCode[2] + CurCode[3] + CurCode[4] + CurCode[5];
@@ -70,6 +72,25 @@ namespace DiscordInviteFinder
                 }
             }
             return Code;
+        }
+
+        static List<String> Load()
+        {
+            string Stored;
+            try { Stored = System.IO.File.ReadAllText("./Last.dat"); }
+            catch { Stored = "aaaaaa"; }
+            List<String> Out = new List<string> { };
+            foreach (char C in Stored) { Out.Add(C.ToString()); }
+            System.Console.WriteLine("Loaded " + Stored);
+            return Out;
+        }
+
+        static void Save(object sender, ConsoleCancelEventArgs args)
+        {
+            string Code = CurCode[0] + CurCode[1] + CurCode[2] + CurCode[3] + CurCode[4] + CurCode[5];
+            try { System.IO.File.Delete("./Last.dat"); } catch { }
+            System.IO.File.WriteAllText("./Last.dat", Code);
+            System.Console.WriteLine("Saved " + Code + "\nWaiting for all Requests to Close.\nPlease Wait!");
         }
 
     }
