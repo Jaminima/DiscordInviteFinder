@@ -14,7 +14,8 @@ namespace NetworkedClient
     {
         static string DefaultServer = "88.110.41.194";
         static int DefaultPort = 6921;
-        static IPAddress MyIP = System.Net.Dns.GetHostByName(System.Net.Dns.GetHostName()).AddressList[0]; //IPAddress.Parse("192.168.1.23");
+        static WebClient WB = new WebClient();
+        static IPAddress MyIP = IPAddress.Parse(WB.DownloadString("https://icanhazip.com/").Replace("\n","")); //IPAddress.Parse("192.168.1.23");
         static TcpListener Receiver;
         static TcpClient Sender;
 
@@ -39,6 +40,7 @@ namespace NetworkedClient
         {
             TargetServer = CustomServer;
             TargetPort = CustomPort;
+            Receiver = new TcpListener(TargetPort);
             Handler = LHandler;
             ListnerThread.Priority = ThreadPriority.AboveNormal;
             Receiver.Start();
