@@ -46,4 +46,4 @@ that people wanted to keep private,</br>
 Or as we found out Group DM's, which is strange as we cant get invites for adding friends.</br>
 </br>
 Being able to join these may seem intrusive to some of the server/group members.</br>
-Hence discresion is adivised but will fall onto the person in posetion of the link.</br>
+Hence discretion is adivised but will fall onto the person in possession of the link.</br>
