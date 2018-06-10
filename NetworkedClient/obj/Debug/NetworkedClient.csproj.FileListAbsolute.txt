@@ -1,0 +1,9 @@
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\bin\Debug\NetworkedClient.exe.config
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\bin\Debug\NetworkedClient.exe
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\bin\Debug\NetworkedClient.pdb
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\obj\Debug\NetworkedClient.csprojAssemblyReference.cache
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\obj\Debug\NetworkedClient.Properties.Resources.resources
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\obj\Debug\NetworkedClient.csproj.GenerateResource.cache
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\obj\Debug\NetworkedClient.csproj.CoreCompileInputs.cache
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\obj\Debug\NetworkedClient.exe
+C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedClient\obj\Debug\NetworkedClient.pdb

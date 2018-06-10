@@ -8,36 +8,21 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 
-namespace NetworkedClient
+namespace NetworkedServer
 {
     public static class NetworkHandler
     {
-        static string DefaultServer = "192.168.1.4";
-        static int DefaultPort = 6921;
-        static IPAddress MyIP = IPAddress.Parse("192.168.1.4");
-        static TcpListener Receiver;
+        static int Port = 6921;
+
+        static TcpListener Receiver=new TcpListener(Port);
         static TcpClient Sender;
 
         public delegate void HandlerType(string[] Data);
         static HandlerType Handler;
 
-        static string TargetServer;
-        static int TargetPort;
-
         static Thread ListnerThread = new Thread(() => Listner());
         public static void Start(HandlerType LHandler)
         {
-            TargetPort = DefaultPort;
-            TargetServer = DefaultServer;
-            Receiver = new TcpListener(TargetPort+1);
-            Handler = LHandler;
-            ListnerThread.Priority = ThreadPriority.AboveNormal;
-            ListnerThread.Start();
-        }
-        public static void Start(HandlerType LHandler, string CustomServer,int CustomPort)
-        {
-            TargetServer = CustomServer;
-            TargetPort = CustomPort;
             Handler = LHandler;
             ListnerThread.Priority = ThreadPriority.AboveNormal;
             ListnerThread.Start();
@@ -45,9 +30,8 @@ namespace NetworkedClient
 
         static void Listner()
         {
-            SendMessage(new List<string> {"Hello"});
-            Console.WriteLine("Requesting Start");
             Receiver.Start();
+            Console.WriteLine("Ready To Receive");
             TcpClient LocalClient = new TcpClient { };
             string Data = "";
             while (true)
@@ -58,21 +42,23 @@ namespace NetworkedClient
                     LocalClient = Receiver.AcceptTcpClient();
                     StreamReader Stream = new StreamReader(LocalClient.GetStream());
                     while (Stream.Peek() > -1){
-                        Data = Data + Convert.ToChar(Stream.Read()).ToString();}
+                        Data = Data + Convert.ToChar(Stream.Read()).ToString();
+                    }
                     Handler(Data.Split("|".ToCharArray()));
                 }
                 System.Threading.Thread.Sleep(10);
             }
         }
 
-        public static void SendMessage(List<String> Content)
+        public static void SendMessage(IPAddress IP,List<String> Content)
         {
             try
             {
-                StreamWriter Writer = new StreamWriter(new TcpClient(TargetServer, TargetPort).GetStream());
-                String FormattedContent = MyIP.ToString()+"|";
+                StreamWriter Writer = new StreamWriter(new TcpClient(IP.ToString(), Port+1).GetStream());
+                String FormattedContent = "";
                 foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
                 Writer.Write(FormattedContent);
+                Console.WriteLine(FormattedContent);
                 Writer.Flush();
                 Writer.Close();
             }catch { }

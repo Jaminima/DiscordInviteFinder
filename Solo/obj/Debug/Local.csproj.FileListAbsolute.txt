@@ -1,0 +1,7 @@
+C:\Users\oscar\Desktop\DiscordInviteFinder\Solo\obj\Debug\Local.csprojAssemblyReference.cache
+C:\Users\oscar\Desktop\DiscordInviteFinder\Solo\obj\Debug\Local.csproj.CoreCompileInputs.cache
+C:\Users\oscar\Desktop\DiscordInviteFinder\Solo\bin\Debug\Local.exe.config
+C:\Users\oscar\Desktop\DiscordInviteFinder\Solo\bin\Debug\Local.exe
+C:\Users\oscar\Desktop\DiscordInviteFinder\Solo\bin\Debug\Local.pdb
+C:\Users\oscar\Desktop\DiscordInviteFinder\Solo\obj\Debug\Local.exe
+C:\Users\oscar\Desktop\DiscordInviteFinder\Solo\obj\Debug\Local.pdb

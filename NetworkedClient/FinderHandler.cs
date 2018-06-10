@@ -5,17 +5,17 @@ using System.Text;
 using System.Threading;
 using System.Net;
 
-namespace DiscordInviteFinder
+namespace NetworkedClient
 {
     public static class FinderHandler
     {
         static List<Thread> Threads = new List<Thread> { };
 
-        static Boolean IsRunning = false;
+        public static Boolean IsRunning = false;
         static int Steps = 0;
 
-        static List<String>
-            StartAt = new List<string> { "a", "a", "a", "a", "a", "a" },
+        public static List<String>
+            StartAt = new List<string> { "u", "m", "C", "2", "z", "A" },
             EndAt = new List<string> { "9", "9", "9", "9", "9", "9" },
             Code;
 
@@ -32,12 +32,16 @@ namespace DiscordInviteFinder
             while (Code != EndAt)
             {
                 string StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
-                Threads.Add(new Thread(() => CheckCode(StrCode)));
-                Threads[Threads.Count - 1].Start();
-                Code = IterateCode(Code);
+                if (IsRunning)
+                {
+                    Threads.Add(new Thread(() => CheckCode(StrCode)));
+                    Threads[Threads.Count - 1].Priority = ThreadPriority.BelowNormal;
+                    Threads[Threads.Count - 1].Start();
+                    Code = IterateCode(Code);
+                }
 
-                if (Threads.Count >= 1000 && !IsRunning) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false && !IsRunning) { Threads.RemoveAt(i); } } }
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.WriteLine("\rCodes Per Second: " + Steps + " Current Code: " + Code + "...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                if (Threads.Count >= 1000) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Current Code: " + StrCode + "...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
             }
         }
 
@@ -45,19 +49,15 @@ namespace DiscordInviteFinder
         static void CheckCode(string Code)
         {
             if (IsValidCode(Code))
-            {ValidCodes.Add(Code);}
+            { ValidCodes.Add(Code); NetworkHandler.SendMessage(new List<string> { "ValidCode", Code }); }
             Steps++;
         }
 
         static WebClient wb = new WebClient();
         static Boolean IsValidCode(string Code)
         {
-            Boolean Response = false;
-            string RequestData="";
-            try { RequestData= System.Text.Encoding.UTF8.GetString(wb.DownloadData("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true"));  }
-            catch { Response = false; }
-            if (RequestData.Contains(Code)) { Response = true; }
-            return Response;
+            try {wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true"); return true;  }
+            catch { return false; }
         }
 
         static List<String> IterateCode(List<String> Code)
@@ -65,12 +65,14 @@ namespace DiscordInviteFinder
             Boolean PreviousOverflowed = false;
             for (int i = 0; i < 6; i++)
             {
-                try {
-                    Code[i] = Chars[Chars.FindIndex(x => x.StartsWith(Code[i])) + 1];
-                    PreviousOverflowed = false; }
-                catch{
-                    Code[i] = Chars[0];
-                    PreviousOverflowed = true;}
+                if (PreviousOverflowed || i == 0) { 
+                    try {
+                        Code[i] = Chars[Chars.FindIndex(x => x.StartsWith(Code[i])) + 1];
+                        PreviousOverflowed = false; }
+                    catch {
+                        Code[i] = Chars[0];
+                        PreviousOverflowed = true; }
+                }
             }
             return Code;
         }
