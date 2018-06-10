@@ -15,7 +15,8 @@ namespace NetworkedClient
         static string DefaultServer = "88.110.41.194";
         static int DefaultPort = 6921;
         static WebClient WB = new WebClient();
-        static IPAddress MyIP = IPAddress.Parse(WB.DownloadString("https://icanhazip.com/").Replace("\n","")); //IPAddress.Parse("192.168.1.23");
+        static String MyIpS = WB.DownloadString("http://checkip.dyndns.org/").Replace("\r", "").Replace("Current IP Address: ", "").Replace("<html><head><title>Current IP Check</title></head><body>","").Replace("</body></html>","").Replace("\n","");
+        static IPAddress MyIP = IPAddress.Parse(MyIpS); //IPAddress.Parse("192.168.1.23"); 
         static TcpListener Receiver;
         static TcpClient Sender;
 
