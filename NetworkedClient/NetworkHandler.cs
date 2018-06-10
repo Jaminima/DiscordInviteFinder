@@ -14,7 +14,7 @@ namespace NetworkedClient
     {
         static string DefaultServer = "192.168.1.4";
         static int DefaultPort = 6921;
-        static IPAddress MyIP = IPAddress.Parse("192.168.1.4");
+        static IPAddress MyIP = IPAddress.Parse("192.168.1.23");
         static TcpListener Receiver;
         static TcpClient Sender;
 
@@ -24,7 +24,7 @@ namespace NetworkedClient
         static string TargetServer;
         static int TargetPort;
 
-        static Thread ListnerThread = new Thread(() => Listner());
+        public static Thread ListnerThread = new Thread(() => Listner());
         public static void Start(HandlerType LHandler)
         {
             TargetPort = DefaultPort;
@@ -32,6 +32,7 @@ namespace NetworkedClient
             Receiver = new TcpListener(TargetPort+1);
             Handler = LHandler;
             ListnerThread.Priority = ThreadPriority.AboveNormal;
+            Receiver.Start();
             ListnerThread.Start();
         }
         public static void Start(HandlerType LHandler, string CustomServer,int CustomPort)
@@ -40,6 +41,7 @@ namespace NetworkedClient
             TargetPort = CustomPort;
             Handler = LHandler;
             ListnerThread.Priority = ThreadPriority.AboveNormal;
+            Receiver.Start();
             ListnerThread.Start();
         }
 
@@ -47,7 +49,6 @@ namespace NetworkedClient
         {
             SendMessage(new List<string> {"Hello"});
             Console.WriteLine("Requesting Start");
-            Receiver.Start();
             TcpClient LocalClient = new TcpClient { };
             string Data = "";
             while (true)

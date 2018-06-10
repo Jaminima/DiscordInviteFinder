@@ -27,10 +27,13 @@ namespace NetworkedClient
         static long StartTime;
         public static void Run()
         {
+            Console.CancelKeyPress += new ConsoleCancelEventHandler(Terminate);
             IsRunning = true;
             Code = StartAt;
             while (Code != EndAt)
             {
+                //if (!NetworkHandler.ListnerThread.IsAlive) { NetworkHandler.ListnerThread.Start(); }
+
                 string StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
                 if (IsRunning)
                 {
@@ -41,7 +44,7 @@ namespace NetworkedClient
                 }
 
                 if (Threads.Count >= 1000) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Current Code: " + StrCode + "...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning) { Console.Write("\rCodes Per Second: " + Steps + " Current Code: " + StrCode + "...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; } 
             }
         }
 
@@ -75,6 +78,17 @@ namespace NetworkedClient
                 }
             }
             return Code;
+        }
+
+        static void Terminate(object sender, ConsoleCancelEventArgs args)
+        {
+            IsRunning = false;
+            Console.Write("\nWaiting For Work To Finish...");
+            while (Threads.Count > 0) { 
+                for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
+            NetworkHandler.SendMessage(new List<string> { "Goodbye" });
+            System.Console.WriteLine("\nPress `Enter` To Exit!");
+            System.Console.ReadLine();
         }
 
     }

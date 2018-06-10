@@ -32,10 +32,6 @@ namespace NetworkedClient
                 FinderHandler.IsRunning = false;
                 FinderHandler.Run();
             }
-            if (Data[0] == "ValidCode")
-            {
-                Console.WriteLine("You Found A Code!!!\n");
-            }
         }
     }
 

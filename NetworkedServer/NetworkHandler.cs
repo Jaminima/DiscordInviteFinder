@@ -58,7 +58,6 @@ namespace NetworkedServer
                 String FormattedContent = "";
                 foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
                 Writer.Write(FormattedContent);
-                Console.WriteLine(FormattedContent);
                 Writer.Flush();
                 Writer.Close();
             }catch { }

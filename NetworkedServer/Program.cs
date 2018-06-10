@@ -16,17 +16,21 @@ namespace NetworkedServer
             while (true) { Console.ReadLine(); }
         }
 
+        static List<String> ClientIPs = new List<String> { };
         static void Handler(string[] Content)
         {
             if (Content[1] == "ValidCode")
             {
-                Console.WriteLine("Received Code");
                 CheckCode(Content[2], Content[0]);
-                NetworkHandler.SendMessage(IPAddress.Parse(Content[0]), new List<string> { "FuckOFf" });
             }
             if (Content[1] == "Hello")
             {
+                ClientIPs.Add(Content[0]);
                 NetworkHandler.SendMessage(IPAddress.Parse(Content[0]), new List<string> { "Start" });
+            }
+            if (Content[1] == "Goodbye")
+            {
+                ClientIPs.Remove(Content[0]);
             }
         }
 
@@ -34,7 +38,8 @@ namespace NetworkedServer
         static void CheckCode(string Code,string IP)
         {
             if (IsValidCode(Code))
-            { ValidCodes.Add(Code); NetworkHandler.SendMessage(IPAddress.Parse(IP),new List<string> { "ValidCode", Code }); }
+            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "https://discord.gg/"+Code+ "\n"); Console.WriteLine("Received Valid Code"); }
+            else { Console.WriteLine("Received InValid Code"); }
         }
 
         static WebClient wb = new WebClient();
