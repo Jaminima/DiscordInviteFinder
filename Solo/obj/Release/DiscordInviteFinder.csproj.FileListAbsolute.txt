@@ -1,7 +1,0 @@
-C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\bin\Release\DiscordInviteFinder.exe.config
-C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\bin\Release\DiscordInviteFinder.exe
-C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\bin\Release\DiscordInviteFinder.pdb
-C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\obj\Release\DiscordInviteFinder.csproj.CoreCompileInputs.cache
-C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\obj\Release\DiscordInviteFinder.exe
-C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\obj\Release\DiscordInviteFinder.pdb
-C:\Users\oscar\Desktop\DiscordInviteFinder\DiscordInviteFinder\obj\Release\DiscordInviteFinder.csprojAssemblyReference.cache

@@ -1,7 +1,0 @@
-C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedServer\bin\Debug\NetworkedServer.exe.config
-C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedServer\bin\Debug\NetworkedServer.exe
-C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedServer\bin\Debug\NetworkedServer.pdb
-C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedServer\obj\Debug\NetworkedServer.csprojAssemblyReference.cache
-C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedServer\obj\Debug\NetworkedServer.csproj.CoreCompileInputs.cache
-C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedServer\obj\Debug\NetworkedServer.exe
-C:\Users\oscar\Desktop\DiscordInviteFinder\NetworkedServer\obj\Debug\NetworkedServer.pdb
