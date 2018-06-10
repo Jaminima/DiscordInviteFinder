@@ -12,9 +12,9 @@ namespace NetworkedClient
 {
     public static class NetworkHandler
     {
-        static string DefaultServer = "192.168.1.4";
+        static string DefaultServer = "88.110.41.194";
         static int DefaultPort = 6921;
-        static IPAddress MyIP = IPAddress.Parse("192.168.1.23");
+        static IPAddress MyIP = System.Net.Dns.GetHostByName(System.Net.Dns.GetHostName()).AddressList[0]; //IPAddress.Parse("192.168.1.23");
         static TcpListener Receiver;
         static TcpClient Sender;
 
@@ -29,7 +29,7 @@ namespace NetworkedClient
         {
             TargetPort = DefaultPort;
             TargetServer = DefaultServer;
-            Receiver = new TcpListener(TargetPort+1);
+            Receiver = new TcpListener(TargetPort);
             Handler = LHandler;
             ListnerThread.Priority = ThreadPriority.AboveNormal;
             Receiver.Start();
@@ -60,7 +60,7 @@ namespace NetworkedClient
                     StreamReader Stream = new StreamReader(LocalClient.GetStream());
                     while (Stream.Peek() > -1){
                         Data = Data + Convert.ToChar(Stream.Read()).ToString();}
-                    Handler(Data.Split("|".ToCharArray()));
+                    if (Data.Contains("|")) { Handler(Data.Split("|".ToCharArray())); }
                 }
                 System.Threading.Thread.Sleep(10);
             }

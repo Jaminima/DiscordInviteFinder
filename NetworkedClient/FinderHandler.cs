@@ -15,7 +15,7 @@ namespace NetworkedClient
         static int Steps = 0;
 
         public static List<String>
-            StartAt = new List<string> { "u", "m", "C", "2", "z", "A" },
+            StartAt = new List<string> { "a", "a", "a", "a", "a", "a" },
             EndAt = new List<string> { "9", "9", "9", "9", "9", "9" },
             Code;
 
@@ -27,14 +27,13 @@ namespace NetworkedClient
         static long StartTime;
         public static void Run()
         {
+            Code = StartAt;
+            string EndCode = EndAt[0] + EndAt[1] + EndAt[2] + EndAt[3] + EndAt[4]+EndAt[5],StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
             Console.CancelKeyPress += new ConsoleCancelEventHandler(Terminate);
             IsRunning = true;
-            Code = StartAt;
-            while (Code != EndAt)
+            while (StrCode!=EndCode)
             {
-                //if (!NetworkHandler.ListnerThread.IsAlive) { NetworkHandler.ListnerThread.Start(); }
-
-                string StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
+                StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
                 if (IsRunning)
                 {
                     Threads.Add(new Thread(() => CheckCode(StrCode)));
@@ -44,8 +43,10 @@ namespace NetworkedClient
                 }
 
                 if (Threads.Count >= 1000) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning) { Console.Write("\rCodes Per Second: " + Steps + " Current Code: " + StrCode + "...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; } 
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning) { Console.Write("\rCodes Per Second: " + Steps + " Current Code: " + StrCode + "...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
             }
+            NetworkHandler.SendMessage(new List<string> { "Goodbye" });
+            NetworkHandler.SendMessage(new List<string> { "Hello" });
         }
 
         static List<String> ValidCodes=new List<string> { };
@@ -80,7 +81,7 @@ namespace NetworkedClient
             return Code;
         }
 
-        static void Terminate(object sender, ConsoleCancelEventArgs args)
+        public static void Terminate(object sender, ConsoleCancelEventArgs args)
         {
             IsRunning = false;
             Console.Write("\nWaiting For Work To Finish...");

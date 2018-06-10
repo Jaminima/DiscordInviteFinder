@@ -44,7 +44,7 @@ namespace NetworkedServer
                     while (Stream.Peek() > -1){
                         Data = Data + Convert.ToChar(Stream.Read()).ToString();
                     }
-                    Handler(Data.Split("|".ToCharArray()));
+                    if (Data.Contains("|")) { Handler(Data.Split("|".ToCharArray())); }
                 }
                 System.Threading.Thread.Sleep(10);
             }
@@ -54,7 +54,7 @@ namespace NetworkedServer
         {
             try
             {
-                StreamWriter Writer = new StreamWriter(new TcpClient(IP.ToString(), Port+1).GetStream());
+                StreamWriter Writer = new StreamWriter(new TcpClient(IP.ToString(), Port).GetStream());
                 String FormattedContent = "";
                 foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
                 Writer.Write(FormattedContent);
