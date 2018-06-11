@@ -54,7 +54,7 @@ namespace NetworkedServer
         static void CheckCode(string Code, string IP)
         {
             if (IsValidCode(Code))
-            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "https://discord.gg/" + Code + "\n"); Console.WriteLine("Received Valid Code"); }
+            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Code"); }
             else { Console.WriteLine("Received InValid Code"); }
         }
 
@@ -64,11 +64,37 @@ namespace NetworkedServer
             try { wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true"); return true; }
             catch { return false; }
         }
-        
+
+        static List<int[]> Bounds = new List<int[]> {  };
         static string[] CreateBounds()
         {
             String StartPoint = "aaaaaa", EndPoint = "999999";
+            int n = 0;
+            while (true)
+            {
+                if (Math.Pow(2, n) >= Bounds.Count+1) { break; } else { n++; }
+            }
+            double BoundFraction = 1/Math.Pow(2,n);
+            double BoundWidth = Math.Round(Math.Pow(62, 6) * BoundFraction,0);
+            StartPoint = IntToCode(BoundWidth * ((Bounds.Count) * BoundFraction));
+            EndPoint = IntToCode(BoundWidth * ((Bounds.Count+1) * BoundFraction)-1);
             return new string[] { StartPoint,EndPoint };
+        }
+
+        static string IntToCode(double Int)
+        {
+            List<Double> IntegeralPart = new List<Double> { };
+            int Loops = 0;
+            while (Int > 0)
+            {
+                IntegeralPart.Add((Int % 62));
+                Int = (Math.Floor(Int / 62));
+                Loops++;
+            }
+            string Code = "";
+            foreach (double i in IntegeralPart) { Code = Code + Chars[int.Parse(i.ToString())]; }
+            for (int i = Loops; i < 6; i++) { Code =  Code + "a"; }
+            return Code;
         }
 
     }
