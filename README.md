@@ -5,7 +5,9 @@ This program will find you all valid discord invites.
 And will either save them localy with the <a href="https://github.com/Jaminima/DiscordInviteFinder/tree/master/FinderBuilds/Solo">Solo Method.</a></br>
 Or</br>
 You may search in a <a href="https://github.com/Jaminima/DiscordInviteFinder/tree/master/FinderBuilds/PoolClient">Pool.</a></br>
-Which will mean you might be able to view them, at the pools hosts discression.
+Which will mean you might be able to view codes, at the pools hosts discression.</br>
+</br>
+For help getting started go <a href="https://github.com/Jaminima/DiscordInviteFinder/tree/master/FinderBuilds">Here</a>.
 
 ## How It Works ##
 
