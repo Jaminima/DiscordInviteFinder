@@ -16,7 +16,7 @@ namespace NetworkedClient
         static int DefaultPort = 6921;
         static WebClient WB = new WebClient();
         static String MyIpS = WB.DownloadString("http://checkip.dyndns.org/").Replace("\r", "").Replace("Current IP Address: ", "").Replace("<html><head><title>Current IP Check</title></head><body>","").Replace("</body></html>","").Replace("\n","");
-        static IPAddress MyIP = IPAddress.Parse("192.168.1.4"); //IPAddress.Parse("192.168.1.23"); 
+        static IPAddress MyIP = IPAddress.Parse(MyIpS); //IPAddress.Parse("192.168.1.23"); 
         static TcpListener Receiver;
         static TcpClient Sender;
 

@@ -42,7 +42,8 @@ namespace NetworkedServer
             if (Content[1] == "Goodbye")
             {
                 ClientIPs.Remove(Content[0]);
-                foreach (BoundsData BD in Bounds) { if (BD.IP == Content[0]) { Bounds.Remove(BD); } }
+                foreach (BoundsData BD in Bounds) { if (BD.IP == Content[0]) { Bounds.Remove(BD); break; } }
+                if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                             "); }
             }
             if (Content[1] == "Steps")
             {
