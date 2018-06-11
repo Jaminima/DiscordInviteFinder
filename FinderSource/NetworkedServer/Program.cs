@@ -48,7 +48,7 @@ namespace NetworkedServer
             if (Content[1] == "Steps")
             {
                 Steps += int.Parse(Content[2]);
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + "...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
             }
         }
 
