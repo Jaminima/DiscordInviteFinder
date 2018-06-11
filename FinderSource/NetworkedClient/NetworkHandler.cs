@@ -12,7 +12,7 @@ namespace NetworkedClient
 {
     public static class NetworkHandler
     {
-        static string DefaultServer = "192.168.1.4";//"18.236.181.128";
+        static string DefaultServer = "18.236.181.128";
         static int DefaultPort = 6921;
         static WebClient WB = new WebClient();
         static String MyIpS = WB.DownloadString("http://checkip.dyndns.org/").Replace("\r", "").Replace("Current IP Address: ", "").Replace("<html><head><title>Current IP Check</title></head><body>","").Replace("</body></html>","").Replace("\n","");
@@ -73,7 +73,7 @@ namespace NetworkedClient
         {
             try
             {
-                StreamWriter Writer = new StreamWriter(new TcpClient(TargetServer, TargetPort+1).GetStream());
+                StreamWriter Writer = new StreamWriter(new TcpClient(TargetServer, TargetPort).GetStream());
                 String FormattedContent = MyIP.ToString()+"|";
                 foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
                 Writer.Write(FormattedContent);

@@ -14,7 +14,7 @@ namespace NetworkedServer
     {
         static int Port = 6921;
 
-        static TcpListener Receiver=new TcpListener(Port+1);
+        static TcpListener Receiver=new TcpListener(Port);
         static TcpClient Sender;
 
         public delegate void HandlerType(string[] Data);

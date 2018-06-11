@@ -35,13 +35,14 @@ namespace NetworkedServer
             if (Content[1] == "Hello")
             {
                 ClientIPs.Add(Content[0]);
-                string[] Bounds = CreateBounds();
+                string[] Bounds = CreateBounds(IPAddress.Parse(Content[0]));
                 NetworkHandler.SendMessage(IPAddress.Parse(Content[0]), new List<string> { "Bounds", Bounds[0],Bounds[1] });
                 NetworkHandler.SendMessage(IPAddress.Parse(Content[0]), new List<string> { "Start" });
             }
             if (Content[1] == "Goodbye")
             {
                 ClientIPs.Remove(Content[0]);
+                foreach (BoundsData BD in Bounds) { if (BD.IP == Content[0]) { Bounds.Remove(BD); } }
             }
             if (Content[1] == "Steps")
             {
@@ -65,8 +66,8 @@ namespace NetworkedServer
             catch { return false; }
         }
 
-        static List<int[]> Bounds = new List<int[]> {  };
-        static string[] CreateBounds()
+        static List<BoundsData> Bounds = new List<BoundsData> { };
+        static string[] CreateBounds(IPAddress IP)
         {
             String StartPoint = "aaaaaa", EndPoint = "999999";
             int n = 0;
@@ -78,6 +79,7 @@ namespace NetworkedServer
             double BoundWidth = Math.Round(Math.Pow(62, 6) * BoundFraction,0);
             StartPoint = IntToCode(BoundWidth * ((Bounds.Count) * BoundFraction));
             EndPoint = IntToCode(BoundWidth * ((Bounds.Count+1) * BoundFraction)-1);
+            Bounds.Add(new BoundsData(StartPoint,EndPoint,IP.ToString()));
             return new string[] { StartPoint,EndPoint };
         }
 
@@ -98,4 +100,13 @@ namespace NetworkedServer
         }
 
     }
+
+    class BoundsData {
+        public String StartPoint, EndPoint, IP;
+        public BoundsData(string SP,string EP,string lIP)
+        {
+            StartPoint = SP;EndPoint = EP;IP = lIP;
+        }
+    }
+
 }
