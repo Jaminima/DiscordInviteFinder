@@ -13,6 +13,7 @@ namespace NetworkedClient
 
         public static Boolean IsRunning = false;
         static int Steps = 0;
+        static int InvitesFound = 0;
 
         public static List<String>
             StartAt = new List<string> { "a", "a", "a", "a", "a", "a" },
@@ -43,7 +44,7 @@ namespace NetworkedClient
                 }
 
                 if (Threads.Count >= 1000) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning) { Console.Write("\rCodes Per Second: " + Steps + " Current Code: " + StrCode + "....");
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning) { Console.Write("\rInvites Found: " + InvitesFound + " Codes Per Second: " + Steps + " Current Code: " + StrCode + "....");
                     NetworkHandler.SendMessage(new List<string> { "Steps",Steps.ToString() });
                     StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
             }
@@ -55,7 +56,7 @@ namespace NetworkedClient
         static void CheckCode(string Code)
         {
             if (IsValidCode(Code))
-            { ValidCodes.Add(Code); NetworkHandler.SendMessage(new List<string> { "ValidCode", Code }); }
+            { ValidCodes.Add(Code); NetworkHandler.SendMessage(new List<string> { "ValidCode", Code }); InvitesFound++; }
             Steps++;
         }
 

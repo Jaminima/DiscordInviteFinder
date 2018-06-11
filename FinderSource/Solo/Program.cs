@@ -14,6 +14,7 @@ namespace DiscordInviteFinder
         static List<Thread> Threads = new List<Thread> { };
         static Boolean Exiting = false;
         static int Steps = 0;
+        static int InvitesFound = 0;
         static long StartTime;
         static void Main(string[] args)
         {
@@ -30,7 +31,7 @@ namespace DiscordInviteFinder
                 Threads[Threads.Count - 1].Start();
                 CurCode = IterateCode(CurCode, Chars);
                 if (Threads.Count >= 1000 && !Exiting) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false && !Exiting) { Threads.RemoveAt(i); } } }
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) {Console.Write("\rCodes Per Second: "+Steps+" Current Code: "+Code+"...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) {Console.Write("\rInvites Found: "+InvitesFound+" Codes Per Second: "+Steps+" Current Code: "+Code+"...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
             }
             System.Console.ReadLine();
         }
@@ -42,6 +43,7 @@ namespace DiscordInviteFinder
             {
                 System.IO.File.AppendAllText("./Valid.dat", "\n" + Code);
                 System.Console.WriteLine("\nFound: https://discord.gg/" + Code);
+                InvitesFound++;
             }
             Steps++;
         }
