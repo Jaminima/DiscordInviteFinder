@@ -79,7 +79,7 @@ namespace NetworkedClient
                 Writer.Write(FormattedContent);
                 Writer.Flush();
                 Writer.Close();
-            }catch { }
+            }catch { Console.WriteLine("Connection Issue"); }
         }
 
     }

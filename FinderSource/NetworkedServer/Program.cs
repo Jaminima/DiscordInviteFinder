@@ -9,17 +9,20 @@ namespace NetworkedServer
 {
     class Program
     {
-
+        public static int Steps = 0;
         static List<String> Chars = new List<string> {
             "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
             "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
             "0","1","2","3","4","5","6","7","8","9" };
 
+        static long StartTime;
         static void Main(string[] args)
         {
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
-            while (true) { Console.ReadLine(); }
+            while (true) {
+                Console.ReadLine();
+            }
         }
 
         static List<String> ClientIPs = new List<String> { };
@@ -39,6 +42,11 @@ namespace NetworkedServer
             if (Content[1] == "Goodbye")
             {
                 ClientIPs.Remove(Content[0]);
+            }
+            if (Content[1] == "Steps")
+            {
+                Steps += int.Parse(Content[2]);
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + "...."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
             }
         }
 
