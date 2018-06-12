@@ -1,6 +1,6 @@
 # The ONLY Discord Invite Finder #
 
-This program will find you all valid discord invites.
+This program will find you all valid discord invites (Discodes).
 
 And will either save them localy with the <a href="https://github.com/Jaminima/DiscordInviteFinder/tree/master/FinderBuilds/Solo">Solo Method.</a></br>
 Or</br>
@@ -12,7 +12,7 @@ For help getting started go <a href="https://github.com/Jaminima/DiscordInviteFi
 ## How It Works ##
 
 To describe crudely</br>
-We iterate thorugh every possible Discord Code,</br>
+We iterate thorugh every possible Discode,</br>
 Starting at "aaaaaa" and finishing at "999999".</br>
 Each time we iterate through we use the discord API to check its validity</br>
 If it is valid we store it.
@@ -21,14 +21,23 @@ If it is valid we store it.
 
 We have tried our best to make the process as fast as possible.</br>
 To Do This We Have Added:
-#### Ram Limiting ####
+### Ram Limiting ###
 The program will cull all inactive threads while there are more than 1000 threads.</br>
 We reuse as much data as possible (ie Global Variables) to ensure as little ram is used as possible.
-#### Threading ####
-To Allow Multiple Codes To Be Tested At The Same Time.
+### Threading ###
+On Pool Finder there is a thread with above normal priority,</br>
+which listens for any server messages.</br>
+On both Solo and Pool each code check gets its own thread which will be auto culled,</br>
+as soon as it is finished.
+### Pool Load Splitting ###
+Each client connected to the pool will have a equal propotrion of all possible Discodes.</br>
+The splitting structure follows this sequence:</br>
 
-However there is only so much we can do.</br>
-Let me explain
+1 : 1/1</br>
+2 : 1/2</br>
+3+4 : 1/4</br>
+5+6+7+8 : 1/8</br>
+n : `1/(next power of 2 >= n)`
 
 ## Processing Complexity ##
 
