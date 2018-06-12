@@ -26,6 +26,7 @@ namespace NetworkedClient
                 FinderHandler.EndAt = UBound;
                 LBound = new List<string> { };
                 UBound = new List<string> { };
+                NetworkHandler.SendMessage(new List<string> { "Hello" });
             }
             if (Data[0] == "Restart" || Data[0]=="Start")
             {

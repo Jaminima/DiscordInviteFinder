@@ -50,12 +50,12 @@ namespace NetworkedServer
         }
 
         static string MessageLocation = "C:/Bitnami/wampstack-7.1.18-1/apache2/htdocs/Messages/";
-        public static void SendMessage(IPAddress IP,List<String> Content)
+        public static void SendMessage(string IP,List<String> Content)
         {
-            try { System.IO.File.Delete(MessageLocation + IP.ToString() + ".html"); } catch { }
+            try { System.IO.File.Delete(MessageLocation + IP + ".html"); } catch { }
             String FormattedContent = "";
             foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
-            System.IO.File.WriteAllText(MessageLocation + IP.ToString() + ".html",FormattedContent);
+            System.IO.File.WriteAllText(MessageLocation + IP + ".html",FormattedContent);
         }
 
     }

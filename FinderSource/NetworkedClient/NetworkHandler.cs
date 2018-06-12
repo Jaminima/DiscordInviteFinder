@@ -15,8 +15,9 @@ namespace NetworkedClient
         static string DefaultServer = "18.236.181.128";
         static int DefaultPort = 6921;
         static WebClient WB = new WebClient();
-        static String MyIpS = WB.DownloadString("http://checkip.dyndns.org/").Replace("\r", "").Replace("Current IP Address: ", "").Replace("<html><head><title>Current IP Check</title></head><body>","").Replace("</body></html>","").Replace("\n","");
-        static IPAddress MyIP = IPAddress.Parse(MyIpS); //IPAddress.Parse("192.168.1.23");
+        static String MyIpExternal = WB.DownloadString("http://checkip.dyndns.org/").Replace("\r", "").Replace("Current IP Address: ", "").Replace("<html><head><title>Current IP Check</title></head><body>","").Replace("</body></html>","").Replace("\n","");
+        static String MyIPInternal = System.Net.Dns.GetHostByName(System.Net.Dns.GetHostName()).AddressList[0].ToString();
+        static String MyIP = MyIpExternal + "-" + MyIPInternal;
 
         public delegate void HandlerType(string[] Data);
         static HandlerType Handler;
@@ -44,17 +45,22 @@ namespace NetworkedClient
 
         static void Listner()
         {
-            SendMessage(new List<string> {"Hello"});
+            SendMessage(new List<string> {"GetBounds"});
             Console.WriteLine("Requesting Start");
             string PreviousData = "";
             while (true)
             {
-                string CurData = WB.DownloadString("http://"+TargetServer + "/Messages/" + MyIpS + ".html");
-                if (CurData != PreviousData)
+                try
                 {
-                    PreviousData = CurData;
-                    if (CurData.Contains("|")) { Handler(CurData.Split("|".ToCharArray())); }
+                    string CurData = WB.DownloadString("http://" + TargetServer + "/Messages/" + MyIpExternal + "-" + MyIPInternal + ".html");
+                    if (CurData != PreviousData)
+                    {
+                        PreviousData = CurData;
+                        SendMessage(new List<string> { "Understood" });
+                        if (CurData.Contains("|")) { Handler(CurData.Split("|".ToCharArray())); }
+                    }
                 }
+                catch { }
                 System.Threading.Thread.Sleep(500);
             }
         }
@@ -64,7 +70,7 @@ namespace NetworkedClient
             try
             {
                 StreamWriter Writer = new StreamWriter(new TcpClient(TargetServer, TargetPort).GetStream());
-                String FormattedContent = MyIP.ToString()+"|";
+                String FormattedContent = MyIP+"|";
                 foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
                 Writer.Write(FormattedContent);
                 Writer.Flush();
