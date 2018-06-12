@@ -60,7 +60,8 @@ namespace NetworkedServer
                 Writer.Write(FormattedContent);
                 Writer.Flush();
                 Writer.Close();
-            }catch { Console.WriteLine("Connection Issue"); }
+            }
+            catch { Console.WriteLine("Connection Issue"); }
         }
 
     }

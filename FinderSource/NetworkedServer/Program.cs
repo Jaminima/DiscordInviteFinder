@@ -9,6 +9,7 @@ namespace NetworkedServer
 {
     class Program
     {
+        static double Combinations = Math.Pow(62, 6),C=Combinations;
         public static int Steps = 0;
         static List<String> Chars = new List<string> {
             "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
@@ -20,7 +21,8 @@ namespace NetworkedServer
         {
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
-            while (true) {
+            while (true)
+            {
                 Console.ReadLine();
             }
         }
@@ -68,19 +70,34 @@ namespace NetworkedServer
         }
 
         static List<BoundsData> Bounds = new List<BoundsData> { };
+        static double BoundCapacity = 1;
         static string[] CreateBounds(IPAddress IP)
         {
             String StartPoint = "aaaaaa", EndPoint = "999999";
-            int n = 0;
+            double n = 0;
             while (true)
             {
                 if (Math.Pow(2, n) >= Bounds.Count+1) { break; } else { n++; }
             }
-            double BoundFraction = 1/Math.Pow(2,n);
-            double BoundWidth = Math.Round(Math.Pow(62, 6) * BoundFraction,0);
-            StartPoint = IntToCode(BoundWidth * ((Bounds.Count) * BoundFraction));
-            EndPoint = IntToCode(BoundWidth * ((Bounds.Count+1) * BoundFraction)-1);
-            Bounds.Add(new BoundsData(StartPoint,EndPoint,IP.ToString()));
+            double BoundFraction = 1 / Math.Pow(2, n);
+            if (BoundFraction < BoundCapacity)
+            {
+                BoundCapacity = BoundFraction;
+                for (int i = 0; i < Math.Pow(2, n)/2; i++) {
+                    Bounds[i].SPi = Math.Floor(0.5 * Bounds[i].SPi);
+                    Bounds[i].EPi = Math.Ceiling(0.5 * Bounds[i].EPi);
+                    Bounds[i].StartPoint = IntToCode(Bounds[i].SPi);
+                    Bounds[i].EndPoint = IntToCode(Bounds[i].EPi);
+                    NetworkHandler.SendMessage(IPAddress.Parse(Bounds[i].IP), new List<string> { "Bounds", Bounds[i].StartPoint, Bounds[i].EndPoint });
+                    NetworkHandler.SendMessage(IPAddress.Parse(Bounds[i].IP), new List<string> { "Restart" });
+                }
+            }
+            double BoundWidth = Math.Ceiling(C * BoundFraction);
+            double SI = C * ((Bounds.Count) * BoundFraction),
+                EI = C * ((Bounds.Count + 1) * BoundFraction)-1;
+            StartPoint = IntToCode(SI);
+            EndPoint = IntToCode(EI);
+            Bounds.Add(new BoundsData(StartPoint,EndPoint,IP.ToString(),SI,EI));
             return new string[] { StartPoint,EndPoint };
         }
 
@@ -104,9 +121,11 @@ namespace NetworkedServer
 
     class BoundsData {
         public String StartPoint, EndPoint, IP;
-        public BoundsData(string SP,string EP,string lIP)
+        public double SPi, EPi;
+        public BoundsData(string SP,string EP,string lIP,double lSPi,double lEPi)
         {
             StartPoint = SP;EndPoint = EP;IP = lIP;
+            SPi = lSPi;EPi = lEPi;
         }
     }
 
