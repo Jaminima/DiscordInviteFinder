@@ -96,8 +96,7 @@ namespace NetworkedServer
                     Bounds[i].EPi = Math.Ceiling(0.5 * Bounds[i].EPi);
                     Bounds[i].StartPoint = IntToCode(Bounds[i].SPi);
                     Bounds[i].EndPoint = IntToCode(Bounds[i].EPi);
-                    NetworkHandler.SendMessage(Bounds[i].IP, new List<string> { "Bounds", Bounds[i].StartPoint, Bounds[i].EndPoint });
-                    NetworkHandler.SendMessage(Bounds[i].IP, new List<string> { "Restart" });
+                    NetworkHandler.SendMessage(Bounds[i].IP, new List<string> { "ResetBounds", Bounds[i].StartPoint, Bounds[i].EndPoint });
                 }
             }
             double BoundWidth = Math.Ceiling(C * BoundFraction);
