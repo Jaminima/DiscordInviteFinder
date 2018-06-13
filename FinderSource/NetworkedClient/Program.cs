@@ -31,6 +31,7 @@ namespace NetworkedClient
             if (Data[0] == "ResetBounds")
             {
                 FinderHandler.IsRunning = false;
+                while (FinderHandler.T.IsAlive) { }
                 foreach (Char C in Data[1]) { LBound.Add(C.ToString()); }
                 foreach (Char C in Data[2]) { UBound.Add(C.ToString()); }
                 FinderHandler.StartAt = LBound;
