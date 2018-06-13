@@ -91,13 +91,18 @@ namespace NetworkedClient
 
         public static void Terminate(object sender, ConsoleCancelEventArgs args)
         {
-            IsRunning = false;
-            Console.Write("\nWaiting For Work To Finish...");
-            while (Threads.Count > 0) { 
-                for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
-            NetworkHandler.SendMessage(new List<string> { "Goodbye" });
-            System.Console.WriteLine("\nPress `Enter` To Exit!");
-            System.Console.ReadLine();
+            if (IsRunning)
+            {
+                IsRunning = false;
+                Console.Write("\nWaiting For Work To Finish...");
+                while (Threads.Count > 0)
+                {
+                    for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } }
+                }
+                NetworkHandler.SendMessage(new List<string> { "Goodbye" });
+                System.Console.WriteLine("\nPress `Enter` To Exit!");
+                System.Console.ReadLine();
+            }
         }
 
     }
