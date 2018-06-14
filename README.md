@@ -17,6 +17,8 @@ Starting at "aaaaaa" and finishing at "999999".</br>
 Each time we iterate through we use the discord API to check its validity</br>
 If it is valid we store it.
 
+<img src="https://github.com/Jaminima/DiscordInviteFinder/blob/master/DiscodeFinderFlowchart.png" width="50%" height="50%">
+
 ## Effectivness ##
 
 We have tried our best to make the process as fast as possible.</br>
