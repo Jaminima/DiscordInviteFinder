@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
+using System.Timers;
 
 namespace NetworkedServer
 {
@@ -17,14 +18,24 @@ namespace NetworkedServer
             "0","1","2","3","4","5","6","7","8","9" };
 
         static long StartTime;
+        static Timer timer;
         static void Main(string[] args)
         {
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
+
+            timer = new System.Timers.Timer(60000);
+            timer.Elapsed += OnTimedEvent;
+            timer.Enabled = true;
             while (true)
             {
                 Console.ReadLine();
             }
+        }
+
+        static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            RemoveInvalidCodes();
         }
 
         static string MessageLocation = "C:/Bitnami/wampstack-7.1.18-1/apache2/htdocs/Messages/";
@@ -124,6 +135,22 @@ namespace NetworkedServer
             return Code;
         }
 
+        static void RemoveInvalidCodes()
+        {
+            List<string> lines = new List<string>();
+            lines = System.IO.File.ReadAllLines("./ValidCodes.dat").ToList();
+
+            foreach (string link in lines)
+            {
+                string code = link.Replace("https://discord.gg/", "");
+                if (!IsValidCode(code))
+                {
+                    lines.RemoveAt(lines.IndexOf(link));
+                }
+            }
+
+            System.IO.File.WriteAllLines("./ValidCodes.dat", lines);
+        }
     }
 
     class BoundsData {
