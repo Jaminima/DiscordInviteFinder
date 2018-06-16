@@ -24,7 +24,7 @@ namespace NetworkedServer
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
 
-            timer = new System.Timers.Timer(60000);
+            timer = new System.Timers.Timer(6000);
             timer.Elapsed += OnTimedEvent;
             timer.Enabled = true;
             while (true)
@@ -137,19 +137,15 @@ namespace NetworkedServer
 
         static void RemoveInvalidCodes()
         {
-            List<string> lines = new List<string>();
-            lines = System.IO.File.ReadAllLines("./ValidCodes.dat").ToList();
+            List<string> oldLines = new List<string>();
+            List<string> newLines = new List<string>();
+            oldLines = System.IO.File.ReadAllLines("./ValidCodes.dat").ToList();
 
-            foreach (string link in lines)
+            foreach (string link in oldLines)
             {
-                string code = link.Replace("https://discord.gg/", "");
-                if (!IsValidCode(code))
-                {
-                    lines.RemoveAt(lines.IndexOf(link));
-                }
+                if (IsValidCode(link.Replace("https://discord.gg/", ""))) { newLines.Add(link); }
             }
-
-            System.IO.File.WriteAllLines("./ValidCodes.dat", lines);
+            System.IO.File.WriteAllLines("./ValidCodes.dat", newLines);
         }
     }
 
