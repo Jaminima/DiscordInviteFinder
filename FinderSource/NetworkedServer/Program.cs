@@ -27,6 +27,7 @@ namespace NetworkedServer
             }
         }
 
+        static string MessageLocation = "C:/Bitnami/wampstack-7.1.18-1/apache2/htdocs/Messages/";
         static List<String> ClientIPs = new List<String> { };
         static void Handler(string[] Content)
         {
@@ -37,9 +38,12 @@ namespace NetworkedServer
             if (Content[1] == "Hello")
             {
                 ClientIPs.Add(Content[0]);
-                string[] Bounds = CreateBounds(IPAddress.Parse(Content[0]));
-                NetworkHandler.SendMessage(IPAddress.Parse(Content[0]), new List<string> { "Bounds", Bounds[0],Bounds[1] });
-                NetworkHandler.SendMessage(IPAddress.Parse(Content[0]), new List<string> { "Start" });
+                NetworkHandler.SendMessage(Content[0], new List<string> { "Start" });
+            }
+            if (Content[1] == "GetBounds")
+            {
+                string[] Bounds = CreateBounds(Content[0]);
+                NetworkHandler.SendMessage(Content[0], new List<string> { "Bounds", Bounds[0], Bounds[1] });
             }
             if (Content[1] == "Goodbye")
             {
@@ -51,6 +55,10 @@ namespace NetworkedServer
             {
                 Steps += int.Parse(Content[2]);
                 if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+            }
+            if (Content[1] == "Understood")
+            {
+                System.IO.File.Delete(MessageLocation + Content[0] + ".html");
             }
         }
 
@@ -71,7 +79,7 @@ namespace NetworkedServer
 
         static List<BoundsData> Bounds = new List<BoundsData> { };
         static double BoundCapacity = 1;
-        static string[] CreateBounds(IPAddress IP)
+        static string[] CreateBounds(string IP)
         {
             String StartPoint = "aaaaaa", EndPoint = "999999";
             double n = 0;
@@ -88,8 +96,7 @@ namespace NetworkedServer
                     Bounds[i].EPi = Math.Ceiling(0.5 * Bounds[i].EPi);
                     Bounds[i].StartPoint = IntToCode(Bounds[i].SPi);
                     Bounds[i].EndPoint = IntToCode(Bounds[i].EPi);
-                    NetworkHandler.SendMessage(IPAddress.Parse(Bounds[i].IP), new List<string> { "Bounds", Bounds[i].StartPoint, Bounds[i].EndPoint });
-                    NetworkHandler.SendMessage(IPAddress.Parse(Bounds[i].IP), new List<string> { "Restart" });
+                    NetworkHandler.SendMessage(Bounds[i].IP, new List<string> { "ResetBounds", Bounds[i].StartPoint, Bounds[i].EndPoint });
                 }
             }
             double BoundWidth = Math.Ceiling(C * BoundFraction);
@@ -97,7 +104,7 @@ namespace NetworkedServer
                 EI = C * ((Bounds.Count + 1) * BoundFraction)-1;
             StartPoint = IntToCode(SI);
             EndPoint = IntToCode(EI);
-            Bounds.Add(new BoundsData(StartPoint,EndPoint,IP.ToString(),SI,EI));
+            Bounds.Add(new BoundsData(StartPoint,EndPoint,IP,SI,EI));
             return new string[] { StartPoint,EndPoint };
         }
 

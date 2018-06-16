@@ -25,6 +25,12 @@ namespace NetworkedClient
             "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
             "0","1","2","3","4","5","6","7","8","9" };
 
+        public static Thread T = new Thread(() => Run());
+        public static void Start()
+        {
+            if (!T.IsAlive) { T = new Thread(() => Run()); T.Start(); }
+        }
+
         static long StartTime;
         public static void Run()
         {
@@ -32,7 +38,7 @@ namespace NetworkedClient
             string EndCode = EndAt[0] + EndAt[1] + EndAt[2] + EndAt[3] + EndAt[4]+EndAt[5],StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
             Console.CancelKeyPress += new ConsoleCancelEventHandler(Terminate);
             IsRunning = true;
-            while (StrCode!=EndCode)
+            while (StrCode != EndCode && IsRunning)
             {
                 StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
                 if (IsRunning)
@@ -48,8 +54,7 @@ namespace NetworkedClient
                     NetworkHandler.SendMessage(new List<string> { "Steps",Steps.ToString() });
                     StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
             }
-            NetworkHandler.SendMessage(new List<string> { "Goodbye" });
-            NetworkHandler.SendMessage(new List<string> { "Hello" });
+            if (IsRunning) { NetworkHandler.SendMessage(new List<string> { "Goodbye" }); NetworkHandler.SendMessage(new List<string> { "Hello" }); } 
         }
 
         static List<String> ValidCodes=new List<string> { };
@@ -86,13 +91,18 @@ namespace NetworkedClient
 
         public static void Terminate(object sender, ConsoleCancelEventArgs args)
         {
-            IsRunning = false;
-            Console.Write("\nWaiting For Work To Finish...");
-            while (Threads.Count > 0) { 
-                for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
-            NetworkHandler.SendMessage(new List<string> { "Goodbye" });
-            System.Console.WriteLine("\nPress `Enter` To Exit!");
-            System.Console.ReadLine();
+            if (IsRunning)
+            {
+                IsRunning = false;
+                Console.Write("\nWaiting For Work To Finish...");
+                while (Threads.Count > 0)
+                {
+                    for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } }
+                }
+                NetworkHandler.SendMessage(new List<string> { "Goodbye" });
+                System.Console.WriteLine("\nPress `Enter` To Exit!");
+                System.Console.ReadLine();
+            }
         }
 
     }

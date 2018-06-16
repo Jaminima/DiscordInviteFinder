@@ -15,7 +15,6 @@ namespace NetworkedServer
         static int Port = 6921;
 
         static TcpListener Receiver=new TcpListener(Port);
-        static TcpClient Sender;
 
         public delegate void HandlerType(string[] Data);
         static HandlerType Handler;
@@ -50,18 +49,13 @@ namespace NetworkedServer
             }
         }
 
-        public static void SendMessage(IPAddress IP,List<String> Content)
+        static string MessageLocation = "C:/Bitnami/wampstack-7.1.18-1/apache2/htdocs/Messages/";
+        public static void SendMessage(string IP,List<String> Content)
         {
-            try
-            {
-                StreamWriter Writer = new StreamWriter(new TcpClient(IP.ToString(), Port).GetStream());
-                String FormattedContent = "";
-                foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
-                Writer.Write(FormattedContent);
-                Writer.Flush();
-                Writer.Close();
-            }
-            catch { Console.WriteLine("Connection Issue"); }
+            try { System.IO.File.Delete(MessageLocation + IP + ".html"); } catch { }
+            String FormattedContent = "";
+            foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
+            System.IO.File.WriteAllText(MessageLocation + IP + ".html",FormattedContent);
         }
 
     }
