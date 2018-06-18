@@ -22,6 +22,7 @@ namespace NetworkedServer
         static void Main(string[] args)
         {
             try { Bot.Start(); } catch { Console.WriteLine("You must Signin Once Before Via The Discord Site."); }
+            Bot.JoinServer("SAt84m3");
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
             timer = new System.Timers.Timer(6000);

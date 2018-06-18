@@ -24,8 +24,9 @@ namespace NetworkedServer
         {
             string Data=Post("https://discordapp.com/api/v6/invite/"+Code,"");
             Newtonsoft.Json.Linq.JObject P = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(Data);
-            string CID=(string)P["channel"]["id"];
-            Post("https://discordapp.com/api/v6/channels/" + CID + "/messages", "{\"content\":\""+JoinMessage+"\",\"nonce\":\"458262556000124958\",\"tts\":false}");
+            string Join=Post("https://discordapp.com/api/v6/channels/" + (string)P["channel"]["id"] + "/messages", "{\"content\":\""+JoinMessage+"\",\"nonce\":\"618169420211337420\",\"tts\":false}");
+            P = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(Post("https://discordapp.com/api/v6/channels/"+(string)P["channel"]["id"]+"/invites", "{\"max_age\":null,\"max_uses\":0,\"temporary\":false}"));
+            System.IO.File.WriteAllText("./ValidCodes.dat",System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + P["code"]));
         }
 
         static string Post(string URL,string Data)
