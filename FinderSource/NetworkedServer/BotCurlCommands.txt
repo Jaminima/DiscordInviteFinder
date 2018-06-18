@@ -1,0 +1,7 @@
+curl 'https://discordapp.com/api/v6/channels/444859479541022725/messages' -H 'authorization: MzAwNzEyMDE5NDY2OTExNzQ0.DglFqQ.kTvoV71VuzYnUe8Vg-F_yvLKmmE' --data-binary '{"content":"hi","nonce":"458262556000124958","tts":false}'
+
+curl 'https://discordapp.com/api/v6/channels/ChannelID/messages' - H 'authorization: AUTHKey' --data-binary '{"content":"MESSAGE","nonce":"458262556000124958","tts":false}'
+
+curl 'https://discordapp.com/api/v6/auth/login' -H 'content-type: application/json' --data-binary '{"email":","password":"","undelete":false,"captcha_key":null}' --compressed
+
+curl 'https://discordapp.com/api/v6/invite/YAeXTP' -X POST -H 'authorization: NDU4Mjc5MzAyMzc5ODY0MDY3.DglV7g.-rsFs7oN4nyxfXS6nbBow3CagAA' -H 'content-length: 0' --compressed

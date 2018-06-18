@@ -21,9 +21,9 @@ namespace NetworkedServer
         static Timer timer;
         static void Main(string[] args)
         {
+            try { Bot.Start(); } catch { Console.WriteLine("You must Signin Once Before Via The Discord Site."); }
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
-
             timer = new System.Timers.Timer(6000);
             timer.Elapsed += OnTimedEvent;
             timer.Enabled = true;
@@ -88,7 +88,7 @@ namespace NetworkedServer
         static void CheckCode(string Code, string IP)
         {
             if (IsValidCode(Code))
-            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Code"); }
+            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Code"); Bot.JoinServer(Code); }
             else { Console.WriteLine("Received InValid Code"); }
         }
 
