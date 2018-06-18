@@ -36,10 +36,20 @@ namespace NetworkedServer
         static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             RemoveInvalidCodes();
+            CheckAliveClients();
+        }
+
+        static void CheckAliveClients()
+        {
+            for (int i= 0;i<ClientIPs.Count;i++)
+            {
+                if (ClientIPs[i].TimeSinceLast >= 5) { ClientIPs.RemoveAt(i); if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                             "); } }
+                else { ClientIPs[i].TimeSinceLast++; }
+            }
         }
 
         static string MessageLocation = "C:/Bitnami/wampstack-7.1.18-1/apache2/htdocs/Messages/";
-        static List<String> ClientIPs = new List<String> { };
+        static List<ClientData> ClientIPs = new List<ClientData> { };
         static void Handler(string[] Content)
         {
             if (Content[1] == "ValidCode")
@@ -48,7 +58,7 @@ namespace NetworkedServer
             }
             if (Content[1] == "Hello")
             {
-                ClientIPs.Add(Content[0]);
+                ClientIPs.Add(new ClientData(Content[0]));
                 NetworkHandler.SendMessage(Content[0], new List<string> { "Start" });
             }
             if (Content[1] == "GetBounds")
@@ -58,7 +68,7 @@ namespace NetworkedServer
             }
             if (Content[1] == "Goodbye")
             {
-                ClientIPs.Remove(Content[0]);
+                ClientIPs.RemoveAt(ClientIPs.FindIndex(x =>x.IP==Content[0]));
                 foreach (BoundsData BD in Bounds) { if (BD.IP == Content[0]) { Bounds.Remove(BD); break; } }
                 if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                             "); }
             }
@@ -66,6 +76,7 @@ namespace NetworkedServer
             {
                 Steps += int.Parse(Content[2]);
                 if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                ClientIPs[ClientIPs.FindIndex(x => x.IP == Content[0])].TimeSinceLast=0;
             }
             if (Content[1] == "Understood")
             {
@@ -156,6 +167,16 @@ namespace NetworkedServer
         {
             StartPoint = SP;EndPoint = EP;IP = lIP;
             SPi = lSPi;EPi = lEPi;
+        }
+    }
+
+    class ClientData
+    {
+        public string IP;
+        public int TimeSinceLast;
+        public ClientData(string lIP)
+        {
+            IP = lIP;TimeSinceLast = 0;
         }
     }
 
