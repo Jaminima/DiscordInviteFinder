@@ -21,9 +21,9 @@ namespace NetworkedServer
         static Timer timer;
         static void Main(string[] args)
         {
+            DiscordAPI.Events.Start();
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
-
             timer = new System.Timers.Timer(6000);
             timer.Elapsed += OnTimedEvent;
             timer.Enabled = true;
@@ -70,13 +70,14 @@ namespace NetworkedServer
             {
                 ClientIPs.RemoveAt(ClientIPs.FindIndex(x =>x.IP==Content[0]));
                 foreach (BoundsData BD in Bounds) { if (BD.IP == Content[0]) { Bounds.Remove(BD); break; } }
-                if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                             "); }
+                if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                                 "); }
             }
             if (Content[1] == "Steps")
             {
                 Steps += int.Parse(Content[2]);
                 if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
-                ClientIPs[ClientIPs.FindIndex(x => x.IP == Content[0])].TimeSinceLast=0;
+                try { ClientIPs[ClientIPs.FindIndex(x => x.IP == Content[0])].TimeSinceLast = 0; }
+                catch { ClientIPs.Add(new ClientData(Content[0])); }
             }
             if (Content[1] == "Understood")
             {
@@ -88,7 +89,12 @@ namespace NetworkedServer
         static void CheckCode(string Code, string IP)
         {
             if (IsValidCode(Code))
-            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Code"); }
+            {   ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
+                Console.WriteLine("Received Valid Code");
+                string CID = DiscordAPI.Events.JoinServer(Code);
+                DiscordAPI.Events.SendMessage(CID, "Your Discord Was Found Via The\\nDiscord Invite Finder\\nLearn More By Joining Our Discord\\nhttps://discord.gg/SAt84m3");
+                System.IO.File.WriteAllText("./ValidCodes.dat", System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + DiscordAPI.Events.CreateInvite(CID)));
+            }
             else { Console.WriteLine("Received InValid Code"); }
         }
 

@@ -12,7 +12,7 @@ namespace NetworkedClient
 {
     public static class NetworkHandler
     {
-        static string DefaultServer = "18.236.181.128";
+        static string DefaultServer = "34.210.26.78";
         static int DefaultPort = 6921;
         static WebClient WB = new WebClient();
         static String MyIpExternal = WB.DownloadString("http://checkip.dyndns.org/").Replace("\r", "").Replace("Current IP Address: ", "").Replace("<html><head><title>Current IP Check</title></head><body>","").Replace("</body></html>","").Replace("\n","");
