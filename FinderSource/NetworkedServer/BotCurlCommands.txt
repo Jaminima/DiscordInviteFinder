@@ -6,4 +6,4 @@ curl 'https://discordapp.com/api/v6/invite/YAeXTP' -X POST -H 'authorization: AU
 
 curl 'https://discordapp.com/api/v6/channels/ChannelID/invites' -H 'content-type: application/json' -H 'authorization: AUTHKey' --data-binary '{"max_age":null,"max_uses":0,"temporary":false}' --compressed
 
-NDU4Mjc5MzAyMzc5ODY0MDY3.DgmYCA.xeuknPSDJ3t9rrLsR6nhfsXlSjI
+curl 'https://discordapp.com/api/v6/channels/444485831751892992/messages?limit=10' -H 'authorization: NDU4Mjc5MzAyMzc5ODY0MDY3.Dgp6tg.mfziF9KuxrHzftHIC2gZCBtvxik' --compressed

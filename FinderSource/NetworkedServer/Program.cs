@@ -21,8 +21,7 @@ namespace NetworkedServer
         static Timer timer;
         static void Main(string[] args)
         {
-            try { Bot.Start(); } catch { Console.WriteLine("You must Signin Once Before Via The Discord Site."); }
-            Bot.JoinServer("SAt84m3");
+            DiscordAPI.Events.Start();
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
             timer = new System.Timers.Timer(6000);
@@ -89,7 +88,11 @@ namespace NetworkedServer
         static void CheckCode(string Code, string IP)
         {
             if (IsValidCode(Code))
-            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Code"); Bot.JoinServer(Code); }
+            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Code");
+                string CID = DiscordAPI.Events.JoinServer(Code);
+                DiscordAPI.Events.SendMessage(CID, "Your Discord Was Found Via The\rDiscord Invite Finder\rLearn More By Joining Our Discord\rhttps://discord.gg/SAt84m3");
+                System.IO.File.WriteAllText("./ValidCodes.dat", System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + DiscordAPI.Events.CreateInvite(CID)));
+            }
             else { Console.WriteLine("Received InValid Code"); }
         }
 
