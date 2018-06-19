@@ -88,9 +88,10 @@ namespace NetworkedServer
         static void CheckCode(string Code, string IP)
         {
             if (IsValidCode(Code))
-            { ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Code");
+            {   ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
+                Console.WriteLine("Received Valid Code");
                 string CID = DiscordAPI.Events.JoinServer(Code);
-                DiscordAPI.Events.SendMessage(CID, "Your Discord Was Found Via The\rDiscord Invite Finder\rLearn More By Joining Our Discord\rhttps://discord.gg/SAt84m3");
+                DiscordAPI.Events.SendMessage(CID, "Your Discord Was Found Via The\\nDiscord Invite Finder\\nLearn More By Joining Our Discord\\nhttps://discord.gg/SAt84m3");
                 System.IO.File.WriteAllText("./ValidCodes.dat", System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + DiscordAPI.Events.CreateInvite(CID)));
             }
             else { Console.WriteLine("Received InValid Code"); }
