@@ -91,9 +91,19 @@ namespace NetworkedServer
             if (IsValidCode(Code))
             {   ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
                 Console.WriteLine("Received Valid Code");
-                string CID = DiscordAPI.Events.JoinServer(Code);
-                DiscordAPI.Events.SendMessage(CID, "Your Discord Was Found Via The\\nDiscord Invite Finder\\nLearn More By Joining Our Discord\\nhttps://discord.gg/SAt84m3");
-                System.IO.File.WriteAllText("./ValidCodes.dat", System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + DiscordAPI.Events.CreateInvite(CID)));
+                string GuildID = DiscordAPI.Events.JoinServer(Code);
+                foreach (Newtonsoft.Json.Linq.JObject Room in DiscordAPI.Events.GetTextChannels(GuildID)) {
+                    try { 
+                        DiscordAPI.Events.SendMessage((string)Room["id"], "Your Discord Was Found Via The\\nDiscord Invite Finder\\nLearn More By Joining Our Discord\\nhttps://discord.gg/SAt84m3");
+                        try
+                        {
+                            string NewInvite = DiscordAPI.Events.CreateInvite((string)Room["id"]);
+                            System.IO.File.WriteAllText("./ValidCodes.dat", System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + NewInvite));
+                        }
+                        catch { Console.WriteLine("Unable To Create Invite"); }
+                        break;
+                    } catch {}
+                }
             }
             else { Console.WriteLine("Received InValid Code"); }
         }
