@@ -61,7 +61,7 @@ namespace NetworkedClient
                     }
                 }
                 catch { }
-                System.Threading.Thread.Sleep(10);
+                System.Threading.Thread.Sleep(500);
             }
         }
 

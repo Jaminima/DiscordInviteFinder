@@ -100,10 +100,11 @@ namespace NetworkedServer
                             string NewInvite = DiscordAPI.Events.CreateInvite((string)Room["id"]);
                             System.IO.File.WriteAllText("./ValidCodes.dat", System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + NewInvite));
                         }
-                        catch { Console.WriteLine("Unable To Create Invite"); }
+                        catch { Console.WriteLine("Unable To Create/Save Invite"); }
                         break;
                     } catch {}
                 }
+                DiscordAPI.Events.LeaveServer(GuildID);
             }
             else { Console.WriteLine("Received InValid Code"); }
         }
