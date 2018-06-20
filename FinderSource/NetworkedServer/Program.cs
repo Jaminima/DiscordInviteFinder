@@ -85,10 +85,11 @@ namespace NetworkedServer
             }
         }
 
+        static WebClient wb = new WebClient();
         static List<String> ValidCodes = new List<string> { };
         static void CheckCode(string Code, string IP)
         {
-            if (IsValidCode(Code))
+            try
             {
                 if (wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true").Contains(@", ""guild"": "))
                 {   ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
@@ -113,14 +114,7 @@ namespace NetworkedServer
                 }
                 else { System.IO.File.AppendAllText("./Dms.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Dm"); }
             }
-            else { Console.WriteLine("Received InValid Code"); }
-        }
-
-        static WebClient wb = new WebClient();
-        static Boolean IsValidCode(string Code)
-        {
-            try { wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true"); return true; }
-            catch { return false; }
+            catch { Console.WriteLine("Received InValid Code"); }
         }
 
         static List<BoundsData> Bounds = new List<BoundsData> { };
