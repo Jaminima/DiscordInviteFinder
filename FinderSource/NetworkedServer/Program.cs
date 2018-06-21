@@ -85,35 +85,36 @@ namespace NetworkedServer
             }
         }
 
+        static WebClient wb = new WebClient();
         static List<String> ValidCodes = new List<string> { };
         static void CheckCode(string Code, string IP)
         {
-            if (IsValidCode(Code))
-            {   ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
-                Console.WriteLine("Received Valid Code");
-                string GuildID = DiscordAPI.Events.JoinServer(Code);
-                foreach (Newtonsoft.Json.Linq.JObject Room in DiscordAPI.Events.GetTextChannels(GuildID)) {
-                    try { 
-                        DiscordAPI.Events.SendMessage((string)Room["id"], "Your Discord Was Found Via The\\nDiscord Invite Finder\\nLearn More By Joining Our Discord\\nhttps://discord.gg/SAt84m3");
+            try
+            {
+                if (wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true").Contains(@", ""guild"": "))
+                {   ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
+                    Console.WriteLine("Received Valid Code");
+                    string GuildID = DiscordAPI.Events.JoinServer(Code);
+                    foreach (Newtonsoft.Json.Linq.JObject Room in DiscordAPI.Events.GetTextChannels(GuildID))
+                    {
                         try
                         {
-                            string NewInvite = DiscordAPI.Events.CreateInvite((string)Room["id"]);
-                            System.IO.File.WriteAllText("./ValidCodes.dat", System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + NewInvite));
+                            DiscordAPI.Events.SendMessage((string)Room["id"], "Your Discord Was Found Via The\\nDiscord Invite Finder\\nLearn More By Joining Our Discord\\nhttps://discord.gg/SAt84m3");
+                            try
+                            {
+                                string NewInvite = DiscordAPI.Events.CreateInvite((string)Room["id"]);
+                                System.IO.File.WriteAllText("./ValidCodes.dat", System.IO.File.ReadAllText("./ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + NewInvite));
+                            }
+                            catch { Console.WriteLine("Unable To Create/Save Invite"); }
+                            break;
                         }
-                        catch { Console.WriteLine("Unable To Create/Save Invite"); }
-                        break;
-                    } catch {}
+                        catch { }
+                    }
+                    DiscordAPI.Events.LeaveServer(GuildID);
                 }
-                DiscordAPI.Events.LeaveServer(GuildID);
+                else { System.IO.File.AppendAllText("./Dms.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Dm"); }
             }
-            else { Console.WriteLine("Received InValid Code"); }
-        }
-
-        static WebClient wb = new WebClient();
-        static Boolean IsValidCode(string Code)
-        {
-            try { wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true"); return true; }
-            catch { return false; }
+            catch { Console.WriteLine("Received InValid Code"); }
         }
 
         static List<BoundsData> Bounds = new List<BoundsData> { };
