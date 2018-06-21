@@ -43,7 +43,7 @@ namespace NetworkedServer
         {
             for (int i= 0;i<ClientIPs.Count;i++)
             {
-                if (ClientIPs[i].TimeSinceLast >= 5) { ClientIPs.RemoveAt(i); if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                             "); } }
+                if (ClientIPs[i].TimeSinceLast >= 5) { for (int l = 0; l < Bounds.Count; l++) { if (Bounds[l].IP == ClientIPs[i].IP) { Bounds.RemoveAt(l); } } ClientIPs.RemoveAt(i); if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                             "); } }
                 else { ClientIPs[i].TimeSinceLast++; }
             }
         }
