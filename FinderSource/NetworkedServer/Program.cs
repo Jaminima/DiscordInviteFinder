@@ -48,7 +48,7 @@ namespace NetworkedServer
             }
         }
 
-        static string MessageLocation = "C:/Bitnami/wampstack-7.1.18-1/apache2/htdocs/Messages/";
+        static string MessageLocation = "/var/www/html/Messages/";
         static List<ClientData> ClientIPs = new List<ClientData> { };
         static void Handler(string[] Content)
         {
@@ -175,6 +175,11 @@ namespace NetworkedServer
                 if (IsValidCode(link.Replace("https://discord.gg/", ""))) { newLines.Add(link); }
             }
             System.IO.File.WriteAllLines("./ValidCodes.dat", newLines);
+        }
+        static Boolean IsValidCode(string Code)
+        {
+            try { wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true"); return true; }
+            catch { return false; }
         }
     }
 

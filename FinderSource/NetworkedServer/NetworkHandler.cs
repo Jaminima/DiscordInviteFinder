@@ -49,7 +49,7 @@ namespace NetworkedServer
             }
         }
 
-        static string MessageLocation = "C:/Bitnami/wampstack-7.1.18-1/apache2/htdocs/Messages/";
+        static string MessageLocation = "/var/www/html/Messages/";
         public static void SendMessage(string IP,List<String> Content)
         {
             try { System.IO.File.Delete(MessageLocation + IP + ".html"); } catch { }
