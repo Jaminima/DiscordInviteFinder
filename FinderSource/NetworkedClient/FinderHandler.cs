@@ -50,9 +50,12 @@ namespace NetworkedClient
                 }
 
                 if (Threads.Count >= 1000) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning) { Console.Write("\rInvites Found: " + InvitesFound + " Codes Per Second: " + Steps + " Current Code: " + StrCode + "....");
-                    NetworkHandler.SendMessage(new List<string> { "Steps",Steps.ToString() });
-                    StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning)
+                {
+                    Console.Write("\rInvites Found: " + InvitesFound + " Codes Per Second: " + Steps + " Current Code: " + StrCode + "....");
+                    NetworkHandler.SendMessage(new List<string> { "Steps", Steps.ToString() });
+                    StartTime = DateTime.UtcNow.Ticks; Steps = 0;
+                }
             }
             if (IsRunning) { NetworkHandler.SendMessage(new List<string> { "Goodbye" }); NetworkHandler.SendMessage(new List<string> { "Hello" }); } 
         }

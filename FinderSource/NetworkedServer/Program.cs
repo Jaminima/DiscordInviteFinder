@@ -93,9 +93,9 @@ namespace NetworkedServer
             ServicePointManager.ServerCertificateValidationCallback +=(sender, cert, chain, sslPolicyErrors) => true;
             try
             {
-            if (wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true").Contains(@", ""guild"": "))
-                {   ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
-                    Console.WriteLine("Received Valid Code");
+                if (wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true").Contains(@", ""guild"": "))
+                {
+                    ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
                     string GuildID = DiscordAPI.Events.JoinServer(Code);
                     foreach (Newtonsoft.Json.Linq.JObject Room in DiscordAPI.Events.GetTextChannels(GuildID))
                     {
@@ -113,6 +113,7 @@ namespace NetworkedServer
                         catch { }
                     }
                     DiscordAPI.Events.LeaveServer(GuildID);
+                    Console.WriteLine("Received Valid Code");
                 }
                 else { System.IO.File.AppendAllText("./Dms.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Dm"); }
             }

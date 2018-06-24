@@ -67,16 +67,16 @@ namespace NetworkedClient
 
         public static void SendMessage(List<String> Content)
         {
-            //try
-            //{
+            try
+            {
                 StreamWriter Writer = new StreamWriter(new TcpClient(TargetServer, TargetPort).GetStream());
                 String FormattedContent = MyIP+"|";
                 foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
                 Writer.Write(FormattedContent);
                 Writer.Flush();
                 Writer.Close();
-            //}catch { Console.WriteLine("Connection Issue"); }
-        }
+        }catch { Console.WriteLine("Connection Issue"); }
+}
 
     }
 }
