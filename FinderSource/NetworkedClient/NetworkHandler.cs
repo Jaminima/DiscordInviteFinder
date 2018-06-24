@@ -12,8 +12,8 @@ namespace NetworkedClient
 {
     public static class NetworkHandler
     {
-        static string DefaultServer = "51.68.46.67";
-        static int DefaultPort = 6921;
+        static string DefaultServer = (string)ConfigHandler.Config["ServerIP"];
+        static int DefaultPort = (int)ConfigHandler.Config["ServerPort"];
         static WebClient WB = new WebClient();
         static String MyIpExternal = WB.DownloadString("http://checkip.dyndns.org/").Replace("\r", "").Replace("Current IP Address: ", "").Replace("<html><head><title>Current IP Check</title></head><body>","").Replace("</body></html>","").Replace("\n","");
         static String MyIPInternal = System.Net.Dns.GetHostByName(System.Net.Dns.GetHostName()).AddressList[0].ToString();
@@ -67,15 +67,15 @@ namespace NetworkedClient
 
         public static void SendMessage(List<String> Content)
         {
-            try
-            {
+            //try
+            //{
                 StreamWriter Writer = new StreamWriter(new TcpClient(TargetServer, TargetPort).GetStream());
                 String FormattedContent = MyIP+"|";
                 foreach (String Item in Content) { FormattedContent = FormattedContent + Item + "|"; }
                 Writer.Write(FormattedContent);
                 Writer.Flush();
                 Writer.Close();
-            }catch { Console.WriteLine("Connection Issue"); }
+            //}catch { Console.WriteLine("Connection Issue"); }
         }
 
     }

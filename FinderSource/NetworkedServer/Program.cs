@@ -21,6 +21,7 @@ namespace NetworkedServer
         static Timer timer;
         static void Main(string[] args)
         {
+            ConfigHandler.Load();
             DiscordAPI.Events.Start();
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
@@ -48,7 +49,7 @@ namespace NetworkedServer
             }
         }
 
-        static string MessageLocation = "/var/www/html/Messages/";
+        static string MessageLocation = (String)ConfigHandler.Config["MessageDir"];
         static List<ClientData> ClientIPs = new List<ClientData> { };
         static void Handler(string[] Content)
         {
@@ -89,9 +90,10 @@ namespace NetworkedServer
         static List<String> ValidCodes = new List<string> { };
         static void CheckCode(string Code, string IP)
         {
+            ServicePointManager.ServerCertificateValidationCallback +=(sender, cert, chain, sslPolicyErrors) => true;
             try
             {
-                if (wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true").Contains(@", ""guild"": "))
+            if (wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true").Contains(@", ""guild"": "))
                 {   ValidCodes.Add(Code); System.IO.File.AppendAllText("./ValidCodes.dat", "\nhttps://discord.gg/" + Code);
                     Console.WriteLine("Received Valid Code");
                     string GuildID = DiscordAPI.Events.JoinServer(Code);

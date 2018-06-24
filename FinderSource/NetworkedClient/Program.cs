@@ -29,6 +29,7 @@ namespace NetworkedClient
         static void Main()
         {
             SetConsoleCtrlHandler(new ControlEventHandler(OnControlEvent), true);
+            ConfigHandler.Load();
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
             while (true) { Console.ReadLine(); }

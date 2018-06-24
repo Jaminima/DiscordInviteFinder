@@ -12,9 +12,9 @@ namespace NetworkedServer
 {
     public static class NetworkHandler
     {
-        static int Port = 6921;
+        static int Port;
 
-        static TcpListener Receiver=new TcpListener(Port);
+        static TcpListener Receiver;
 
         public delegate void HandlerType(string[] Data);
         static HandlerType Handler;
@@ -22,6 +22,9 @@ namespace NetworkedServer
         static Thread ListnerThread = new Thread(() => Listner());
         public static void Start(HandlerType LHandler)
         {
+            Port = (int)ConfigHandler.Config["Port"];
+            MessageLocation = (String)ConfigHandler.Config["MessageDir"];
+            Receiver = new TcpListener(Port);
             Handler = LHandler;
             ListnerThread.Priority = ThreadPriority.AboveNormal;
             ListnerThread.Start();
@@ -49,7 +52,7 @@ namespace NetworkedServer
             }
         }
 
-        static string MessageLocation = "/var/www/html/Messages/";
+        static string MessageLocation;
         public static void SendMessage(string IP,List<String> Content)
         {
             try { System.IO.File.Delete(MessageLocation + IP + ".html"); } catch { }
