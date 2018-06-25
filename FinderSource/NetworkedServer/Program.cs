@@ -76,7 +76,7 @@ namespace NetworkedServer
             if (Content[1] == "Steps")
             {
                 Steps += int.Parse(Content[2]);
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); System.IO.File.WriteAllText("./ServerSpeed.dat", Steps.ToString()); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
                 try { ClientIPs[ClientIPs.FindIndex(x => x.IP == Content[0])].TimeSinceLast = 0; }
                 catch { ClientIPs.Add(new ClientData(Content[0])); }
             }
