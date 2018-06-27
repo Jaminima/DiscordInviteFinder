@@ -10,7 +10,6 @@ namespace NetworkedServer
 {
     class Program
     {
-        static string FilesLocation = "/var/www/html/NodeJS/";
         static double Combinations = Math.Pow(62, 6),C=Combinations;
         public static int Steps = 0;
         static List<String> Chars = new List<string> {
@@ -18,6 +17,7 @@ namespace NetworkedServer
             "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
             "0","1","2","3","4","5","6","7","8","9" };
 
+        static string SpeedLocation = "";
         static string CodesLocation = "";
         static string DmsLocation = "";
 
@@ -26,6 +26,7 @@ namespace NetworkedServer
         static void Main(string[] args)
         {
             ConfigHandler.Load();
+            SpeedLocation = (string)ConfigHandler.Config["Speed"];
             CodesLocation = (string)ConfigHandler.Config["ValidCodes"];
             DmsLocation = (string)ConfigHandler.Config["Dms"];
             DiscordAPI.Events.Start();
@@ -82,7 +83,7 @@ namespace NetworkedServer
             if (Content[1] == "Steps")
             {
                 Steps += int.Parse(Content[2]);
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); System.IO.File.WriteAllText(FilesLocation + "ServerSpeed.dat", Steps.ToString()); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); System.IO.File.WriteAllText(SpeedLocation, Steps.ToString()); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
                 try { ClientIPs[ClientIPs.FindIndex(x => x.IP == Content[0])].TimeSinceLast = 0; }
                 catch { ClientIPs.Add(new ClientData(Content[0])); }
             }
