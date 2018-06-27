@@ -18,11 +18,16 @@ namespace NetworkedServer
             "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
             "0","1","2","3","4","5","6","7","8","9" };
 
+        static string CodesLocation = "";
+        static string DmsLocation = "";
+
         static long StartTime;
         static Timer timer;
         static void Main(string[] args)
         {
             ConfigHandler.Load();
+            CodesLocation = (string)ConfigHandler.Config["ValidCodes"];
+            DmsLocation = (string)ConfigHandler.Config["Dms"];
             DiscordAPI.Events.Start();
             NetworkHandler.Start(Handler);
             Console.WriteLine("Running");
@@ -96,7 +101,7 @@ namespace NetworkedServer
             {
                 if (wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true").Contains(@", ""guild"": "))
                 {
-                    ValidCodes.Add(Code); System.IO.File.AppendAllText(FilesLocation + "ValidCodes.dat", "\nhttps://discord.gg/" + Code);
+                    ValidCodes.Add(Code); System.IO.File.AppendAllText(CodesLocation, "\nhttps://discord.gg/" + Code);
                     string GuildID = DiscordAPI.Events.JoinServer(Code);
                     foreach (Newtonsoft.Json.Linq.JObject Room in DiscordAPI.Events.GetTextChannels(GuildID))
                     {
@@ -106,7 +111,7 @@ namespace NetworkedServer
                             try
                             {
                                 string NewInvite = DiscordAPI.Events.CreateInvite((string)Room["id"]);
-                                System.IO.File.WriteAllText(FilesLocation + "ValidCodes.dat", System.IO.File.ReadAllText(FilesLocation + "ValidCodes.dat").Replace("https://discord.gg/" + Code, "https://discord.gg/" + NewInvite));
+                                System.IO.File.WriteAllText(CodesLocation, System.IO.File.ReadAllText(CodesLocation).Replace("https://discord.gg/" + Code, "https://discord.gg/" + NewInvite));
                             }
                             catch { Console.WriteLine("Unable To Create/Save Invite"); }
                             break;
@@ -116,7 +121,7 @@ namespace NetworkedServer
                     DiscordAPI.Events.LeaveServer(GuildID);
                     Console.WriteLine("Received Valid Code");
                 }
-                else { System.IO.File.AppendAllText(FilesLocation + "Dms.dat", "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Dm"); }
+                else { System.IO.File.AppendAllText(DmsLocation, "\nhttps://discord.gg/" + Code); Console.WriteLine("Received Valid Dm"); }
             }
             catch { Console.WriteLine("Received InValid Code"); }
         }
@@ -172,13 +177,13 @@ namespace NetworkedServer
         {
             List<string> oldLines = new List<string>();
             List<string> newLines = new List<string>();
-            oldLines = System.IO.File.ReadAllLines(FilesLocation + "ValidCodes.dat").ToList();
+            oldLines = System.IO.File.ReadAllLines(CodesLocation).ToList();
 
             foreach (string link in oldLines)
             {
                 if (IsValidCode(link.Replace("https://discord.gg/", ""))) { if (newLines.Contains(link)) { } else { newLines.Add(link); } }
             }
-            System.IO.File.WriteAllLines(FilesLocation + "ValidCodes.dat", newLines);
+            System.IO.File.WriteAllLines(CodesLocation, newLines);
         }
         static Boolean IsValidCode(string Code)
         {

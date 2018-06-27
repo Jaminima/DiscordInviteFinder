@@ -1,1 +1,1 @@
-{"Port":6921,"MessageDir":"/var/www/html/Messages"}
+{"Port":6921,"MessageDir":"/var/www/html/Messages/","ValidCodes":"/var/www/html/ValidCodes/ValidCodes.dat","Dms":"/var/www/html/ValidCodes/DMs.dat"}
