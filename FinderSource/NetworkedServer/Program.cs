@@ -51,7 +51,7 @@ namespace NetworkedServer
         {
             for (int i= 0;i<ClientIPs.Count;i++)
             {
-                if (ClientIPs[i].TimeSinceLast >= 5) { for (int l = 0; l < Bounds.Count; l++) { if (Bounds[l].IP == ClientIPs[i].IP) { Bounds.RemoveAt(l); } } ClientIPs.RemoveAt(i); if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                             "); } }
+                if (ClientIPs[i].TimeSinceLast >= 5) { for (int l = 0; l < Bounds.Count; l++) { if (Bounds[l].IP == ClientIPs[i].IP) { Bounds.RemoveAt(l); } } ClientIPs.RemoveAt(i); if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                             "); System.IO.File.WriteAllText(SpeedLocation, "0"); } }
                 else { ClientIPs[i].TimeSinceLast++; }
             }
         }
@@ -78,12 +78,18 @@ namespace NetworkedServer
             {
                 ClientIPs.RemoveAt(ClientIPs.FindIndex(x =>x.IP==Content[0]));
                 foreach (BoundsData BD in Bounds) { if (BD.IP == Content[0]) { Bounds.Remove(BD); break; } }
-                if (ClientIPs.Count == 0) { Console.WriteLine("\rNo Clients                                 "); }
+                if (ClientIPs.Count == 0) {
+                    Console.WriteLine("\rNo Clients                                 ");
+                    System.IO.File.WriteAllText(SpeedLocation,"0");
+                }
             }
             if (Content[1] == "Steps")
             {
                 Steps += int.Parse(Content[2]);
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+"......."); System.IO.File.WriteAllText(SpeedLocation, Steps.ToString()); StartTime = DateTime.UtcNow.Ticks; Steps = 0; }
+                if (DateTime.UtcNow.Ticks - StartTime >= 10000000) { Console.Write("\rCodes Per Second: " + Steps + " Clients: "+ClientIPs.Count+".......");
+                    System.IO.File.WriteAllText(SpeedLocation, Steps.ToString());
+                    StartTime = DateTime.UtcNow.Ticks; Steps = 0;
+                }
                 try { ClientIPs[ClientIPs.FindIndex(x => x.IP == Content[0])].TimeSinceLast = 0; }
                 catch { ClientIPs.Add(new ClientData(Content[0])); }
             }
