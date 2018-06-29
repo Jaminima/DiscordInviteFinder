@@ -120,7 +120,7 @@ namespace NetworkedServer
                                 string NewInvite = DiscordAPI.Events.CreateInvite((string)Room["id"]);
                                 System.IO.File.WriteAllText(CodesLocation, System.IO.File.ReadAllText(CodesLocation).Replace("https://discord.gg/" + Code, "https://discord.gg/" + NewInvite));
                             }
-                            catch { Console.WriteLine("Unable To Create/Save Invite"); }
+                            catch (Exception e) { Console.WriteLine("Unable To Create/Save Invite\n",e.Message); }
                             break;
                         }
                         catch { }
@@ -188,12 +188,13 @@ namespace NetworkedServer
 
             foreach (string link in oldLines)
             {
-                if (IsValidCode(link.Replace("https://discord.gg/", ""))) { if (newLines.Contains(link)) { } else { newLines.Add(link); } }
+                if (IsValidCode(link.Replace("https://discord.gg/", ""))) { newLines.Add(link); } //if (newLines.Contains(link)) { } else { newLines.Add(link);
             }
             System.IO.File.WriteAllLines(CodesLocation, newLines);
         }
         static Boolean IsValidCode(string Code)
         {
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             try { wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true"); return true; }
             catch { return false; }
         }
