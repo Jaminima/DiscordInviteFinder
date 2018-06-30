@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Net;
+using System.IO;
 
 namespace NetworkedClient
 {
@@ -14,7 +15,6 @@ namespace NetworkedClient
         public static Boolean IsRunning = false;
         static int Steps = 0;
         static int InvitesFound = 0;
-
         public static List<String>
             StartAt = new List<string> { "a", "a", "a", "a", "a", "a" },
             EndAt = new List<string> { "9", "9", "9", "9", "9", "9" },
@@ -41,7 +41,7 @@ namespace NetworkedClient
             while (StrCode != EndCode && IsRunning)
             {
                 StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
-                if (IsRunning)
+                if (IsRunning && Threads.Count<=1000)
                 {
                     Threads.Add(new Thread(() => CheckCode(StrCode)));
                     Threads[Threads.Count - 1].Priority = ThreadPriority.BelowNormal;
@@ -49,7 +49,7 @@ namespace NetworkedClient
                     Code = IterateCode(Code);
                 }
 
-                if (Threads.Count >= 1000) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
+                if (Threads.Count > 100) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
                 if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning)
                 {
                     Console.Write("\rInvites Found: " + InvitesFound + " Codes Per Second: " + Steps + " Current Code: " + StrCode + "....");
@@ -60,7 +60,7 @@ namespace NetworkedClient
             if (IsRunning) { NetworkHandler.SendMessage(new List<string> { "Goodbye" }); NetworkHandler.SendMessage(new List<string> { "Hello" }); } 
         }
 
-        static List<String> ValidCodes=new List<string> { };
+        static List<String> ValidCodes=new List<string> {  };
         static void CheckCode(string Code)
         {
             if (IsValidCode(Code))
@@ -68,11 +68,19 @@ namespace NetworkedClient
             Steps++;
         }
 
-        static WebClient wb = new WebClient();
-        static Boolean IsValidCode(string Code)
+        //static WebClient wb = new WebClient();
+        public static Boolean IsValidCode(string Code)
         {
-            try {wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true"); return true;  }
-            catch { return false; }
+            Uri urlCheck = new Uri("https://discordapp.com/api/v6/invite/" + Code /*+ "?with_counts=true"*/);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlCheck);
+            //request.Timeout = 1000;
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK) { return true; } else { return false; }
+            }
+            catch (Exception E) {/* Console.WriteLine(Code+"\n"+E);*/ return false; }
+            //string c=wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true");
         }
 
         static List<String> IterateCode(List<String> Code)
