@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Net;
+using System.Net.Http;
 using System.IO;
 
 namespace NetworkedClient
 {
     public static class FinderHandler
     {
-        static List<Thread> Threads = new List<Thread> { };
-
         public static Boolean IsRunning = false;
         static int Steps = 0;
         static int InvitesFound = 0;
@@ -30,9 +30,9 @@ namespace NetworkedClient
         {
             if (!T.IsAlive) { T = new Thread(() => Run()); T.Start(); }
         }
-
+        static List<Thread> Threads = new List<Thread> { };
         static long StartTime;
-        public static void Run()
+        public static async void Run()
         {
             Code = StartAt;
             string EndCode = EndAt[0] + EndAt[1] + EndAt[2] + EndAt[3] + EndAt[4]+EndAt[5],StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
@@ -41,15 +41,8 @@ namespace NetworkedClient
             while (StrCode != EndCode && IsRunning)
             {
                 StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
-                if (IsRunning && Threads.Count<=1000)
-                {
-                    Threads.Add(new Thread(() => CheckCode(StrCode)));
-                    Threads[Threads.Count - 1].Priority = ThreadPriority.BelowNormal;
-                    Threads[Threads.Count - 1].Start();
-                    Code = IterateCode(Code);
-                }
-
-                if (Threads.Count > 100) { for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } } }
+                await CheckCode(StrCode);
+                Code = IterateCode(Code);
                 if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning)
                 {
                     Console.Write("\rInvites Found: " + InvitesFound + " Codes Per Second: " + Steps + " Current Code: " + StrCode + "....");
@@ -61,26 +54,12 @@ namespace NetworkedClient
         }
 
         static List<String> ValidCodes=new List<string> {  };
-        static void CheckCode(string Code)
+        static HttpClient client = new HttpClient() { MaxResponseContentBufferSize = 1000000 };
+        static async Task CheckCode(string Code)
         {
-            if (IsValidCode(Code))
-            { ValidCodes.Add(Code); NetworkHandler.SendMessage(new List<string> { "ValidCode", Code }); InvitesFound++; }
             Steps++;
-        }
-
-        //static WebClient wb = new WebClient();
-        public static Boolean IsValidCode(string Code)
-        {
-            Uri urlCheck = new Uri("https://discordapp.com/api/v6/invite/" + Code /*+ "?with_counts=true"*/);
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlCheck);
-            //request.Timeout = 1000;
-            try
-            {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                if (response.StatusCode == HttpStatusCode.OK) { return true; } else { return false; }
-            }
-            catch (Exception E) {/* Console.WriteLine(Code+"\n"+E);*/ return false; }
-            //string c=wb.DownloadString("https://discordapp.com/api/v6/invite/" + Code + "?with_counts=true");
+            try { await client.GetStringAsync("https://discordapp.com/api/v6/invite/" + Code); } catch { return; }
+            ValidCodes.Add(Code); NetworkHandler.SendMessage(new List<string> { "ValidCode", Code }); InvitesFound++; 
         }
 
         static List<String> IterateCode(List<String> Code)
@@ -106,10 +85,6 @@ namespace NetworkedClient
             {
                 IsRunning = false;
                 Console.Write("\nWaiting For Work To Finish...");
-                while (Threads.Count > 0)
-                {
-                    for (int i = 0; i < Threads.Count; i++) { if (Threads[i].IsAlive == false) { Threads.RemoveAt(i); } }
-                }
                 NetworkHandler.SendMessage(new List<string> { "Goodbye" });
                 System.Console.WriteLine("\nPress `Enter` To Exit!");
                 System.Console.ReadLine();
