@@ -42,8 +42,8 @@ namespace NetworkedClient
             {
                 foreach (Char C in Data[1]) { LBound.Add(C.ToString()); }
                 foreach (Char C in Data[2]) { UBound.Add(C.ToString()); }
-                //FinderHandler.StartAt = LBound;
-                //FinderHandler.EndAt = UBound;
+                FinderHandler.StartAt = LBound;
+                FinderHandler.EndAt = UBound;
                 LBound = new List<string> { };
                 UBound = new List<string> { };
                 NetworkHandler.SendMessage(new List<string> { "Hello" });
