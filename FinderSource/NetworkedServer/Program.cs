@@ -60,6 +60,7 @@ namespace NetworkedServer
         static List<ClientData> ClientIPs = new List<ClientData> { };
         static void Handler(string[] Content)
         {
+            if (Content.Length == 0) { return; }
             if (Content[1] == "ValidCode")
             {
                 CheckCode(Content[2], Content[0]);

@@ -38,6 +38,7 @@ namespace NetworkedClient
         
         public static void Handler(String[] Data)
         {
+            if (Data.Length == 0) { return; }
             if (Data[0] == "Bounds")
             {
                 foreach (Char C in Data[1]) { LBound.Add(C.ToString()); }
