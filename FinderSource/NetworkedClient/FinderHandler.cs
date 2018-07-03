@@ -40,25 +40,45 @@ namespace NetworkedClient
             IsRunning = true;
             while (StrCode != EndCode && IsRunning)
             {
-                StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
-                await CheckCode(StrCode);
-                Code = IterateCode(Code);
-                if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning)
+                if (Threads.Count <= 200)
                 {
-                    Console.Write("\rInvites Found: " + InvitesFound + " Codes Per Second: " + Steps + " Current Code: " + StrCode + "....");
-                    NetworkHandler.SendMessage(new List<string> { "Steps", Steps.ToString() });
-                    StartTime = DateTime.UtcNow.Ticks; Steps = 0;
+                    StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
+                    Threads.Add(new Thread(() => StartCheckCode(StrCode)));
+                    Threads[Threads.Count - 1].Start();
+                    //await CheckCode(StrCode);
+                    if (Threads.Count > 100)
+                    {
+                        for (int i = 0; i < Threads.Count; i++) { if (!Threads[i].IsAlive) { Threads.RemoveAt(i); } }
+                    }
+                    await UpdateDisplay(StrCode);
+                    Code = IterateCode(Code);
                 }
             }
             if (IsRunning) { NetworkHandler.SendMessage(new List<string> { "Goodbye" }); NetworkHandler.SendMessage(new List<string> { "Hello" }); } 
         }
 
+        static async Task UpdateDisplay(string StrCode)
+        {
+            if (DateTime.UtcNow.Ticks - StartTime >= 10000000 && IsRunning)
+            {
+                Console.Write("\rInvites Found: " + InvitesFound + " Codes Per Second: " + Steps + " Current Code: " + StrCode + "...."+Threads.Count);
+                NetworkHandler.SendMessage(new List<string> { "Steps", Steps.ToString() });
+                StartTime = DateTime.UtcNow.Ticks; Steps = 0;
+            }
+        }
+
+        static async void StartCheckCode(string Code)
+        {
+            await CheckCode(Code);
+            System.Threading.Thread.CurrentThread.Abort();
+        }
+
         static List<String> ValidCodes=new List<string> {  };
-        static HttpClient client = new HttpClient() { MaxResponseContentBufferSize = 1000000 };
+        static HttpClient client = new HttpClient() { MaxResponseContentBufferSize = 1000 };
         static async Task CheckCode(string Code)
         {
             Steps++;
-            try { await client.GetStringAsync("https://discordapp.com/api/v6/invite/" + Code); } catch { return; }
+            try { await client.GetStringAsync("https://discordapp.com/api/v6/invite/" + Code); } catch (Exception E) { if (!E.Message.Contains("404")) { Console.WriteLine(E.Message); } return; }
             ValidCodes.Add(Code); NetworkHandler.SendMessage(new List<string> { "ValidCode", Code }); InvitesFound++; 
         }
 
