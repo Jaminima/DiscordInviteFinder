@@ -37,7 +37,6 @@ namespace NetworkedClient
             Code = StartAt;
             string EndCode = EndAt[0] + EndAt[1] + EndAt[2] + EndAt[3] + EndAt[4]+EndAt[5],StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
             Console.CancelKeyPress += new ConsoleCancelEventHandler(Terminate);
-            StartCheckCode("nfa8Yk");
             IsRunning = true;
             ServicePointManager.ReusePort = true;
             client.DefaultRequestHeaders.ConnectionClose = true;
