@@ -37,22 +37,25 @@ namespace NetworkedClient
             Code = StartAt;
             string EndCode = EndAt[0] + EndAt[1] + EndAt[2] + EndAt[3] + EndAt[4]+EndAt[5],StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
             Console.CancelKeyPress += new ConsoleCancelEventHandler(Terminate);
+            StartCheckCode("nfa8Yk");
             IsRunning = true;
+            ServicePointManager.ReusePort = true;
+            client.DefaultRequestHeaders.ConnectionClose = true;
             while (StrCode != EndCode && IsRunning)
             {
-                if (Threads.Count <= 200)
+                if (Threads.Count < 1)
                 {
-                    StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
                     Threads.Add(new Thread(() => StartCheckCode(StrCode)));
                     Threads[Threads.Count - 1].Start();
                     //await CheckCode(StrCode);
-                    if (Threads.Count > 100)
-                    {
-                        for (int i = 0; i < Threads.Count; i++) { if (!Threads[i].IsAlive) { Threads.RemoveAt(i); } }
-                    }
-                    await UpdateDisplay(StrCode);
                     Code = IterateCode(Code);
+                    StrCode = Code[0] + Code[1] + Code[2] + Code[3] + Code[4] + Code[5];
                 }
+                if (Threads.Count > 0)
+                {
+                    for (int i = 0; i < Threads.Count; i++) { if (!Threads[i].IsAlive) { Threads.RemoveAt(i); } }
+                }
+                await UpdateDisplay(StrCode);
             }
             if (IsRunning) { NetworkHandler.SendMessage(new List<string> { "Goodbye" }); NetworkHandler.SendMessage(new List<string> { "Hello" }); } 
         }
@@ -75,11 +78,12 @@ namespace NetworkedClient
 
         static List<String> ValidCodes=new List<string> {  };
         static HttpClient client = new HttpClient() { MaxResponseContentBufferSize = 1000 };
+
         static async Task CheckCode(string Code)
         {
             Steps++;
-            try { await client.GetStringAsync("https://discordapp.com/api/v6/invite/" + Code); } catch (Exception E) { if (!E.Message.Contains("404")) { Console.WriteLine(E.Message); } return; }
-            ValidCodes.Add(Code); NetworkHandler.SendMessage(new List<string> { "ValidCode", Code }); InvitesFound++; 
+            try { String Conn = await client.GetStringAsync("https://discordapp.com/api/v6/invite/" + Code); } catch (Exception E) { if (!E.Message.Contains("404")) { Console.WriteLine(E.Message); } return; }
+            ValidCodes.Add(Code); NetworkHandler.SendMessage(new List<string> { "ValidCode", Code }); InvitesFound++;
         }
 
         static List<String> IterateCode(List<String> Code)

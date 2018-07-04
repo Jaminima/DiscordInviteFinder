@@ -205,7 +205,8 @@ namespace NetworkedServer
 
             foreach (string link in oldLines)
             {
-                if (IsValidCode(link.Replace("https://discord.gg/", ""))) { newLines.Add(link); } //if (newLines.Contains(link)) { } else { newLines.Add(link);
+                if (IsValidCode(link.Replace("https://discord.gg/", "")))
+                { if (!newLines.Contains(link)) { newLines.Add(link); } }
             }
             System.IO.File.WriteAllLines(Location, newLines);
         }
