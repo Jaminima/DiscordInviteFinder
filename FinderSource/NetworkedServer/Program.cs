@@ -102,7 +102,7 @@ namespace NetworkedServer
 
         static WebClient wb = new WebClient();
         static List<String> ValidCodes = new List<string> { };
-        static String JoinMessage = "Your Discord Was Found Via The\\nDiscord Invite Finder\\nLearn More By Joining Our Discord\\nhttps://discord.gg/SAt84m3";
+        static String JoinMessage = "Your Discord Was Found Via The\\nDiscord Invite Finder\\nLearn More By Joining Our Discord\\nhttps://discord.gg/SAt84m3\\nIf you dont want your discord to be listed,\\nPlease contact an Admin on our Discord.";
         static void CheckCode(string Code, string IP)
         {
             ServicePointManager.ServerCertificateValidationCallback +=(sender, cert, chain, sslPolicyErrors) => true;
@@ -118,7 +118,7 @@ namespace NetworkedServer
                         {
                             try
                             {
-                                DiscordAPI.Events.SendMessage((string)Room["id"], JoinMessage);
+                                //DiscordAPI.Events.SendMessage((string)Room["id"], JoinMessage);
                                 try
                                 {
                                     string NewInvite = DiscordAPI.Events.CreateInvite((string)Room["id"]);
@@ -136,7 +136,7 @@ namespace NetworkedServer
                     {
                         System.IO.File.AppendAllText(DmsLocation, "\nhttps://discord.gg/" + Code);
                         string DMID = DiscordAPI.Events.JoinDM(Code);
-                        try { DiscordAPI.Events.SendMessage(DMID, JoinMessage); } catch { }
+                        //try { DiscordAPI.Events.SendMessage(DMID, JoinMessage); } catch { }
                         string NewInvite = DiscordAPI.Events.CreateDMInvite(DMID);
                         System.IO.File.WriteAllText(DmsLocation, System.IO.File.ReadAllText(DmsLocation).Replace("https://discord.gg/" + Code, "https://discord.gg/" + NewInvite));
                         Console.WriteLine("Received Valid Dm");
